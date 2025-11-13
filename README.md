@@ -12,7 +12,12 @@
     cd CSAI
     ```
 2. **Test cases:**
-   Các testcase lưu trong mục `problems/test_cases`
+   Các testcase lưu trong mục `problems/test_cases` dưới dạng file `.txt`. Nếu bạn thêm testcase mới đảm bảo testcase của bạn đúng định dạng và 1-based:
+   ```bash
+   vertices edges
+   1 2
+   1 3
+   ```
 4.  **Cài đặt các Thư viện cần thiết:**
     Nếu bạn dùng venv, nhóm cung cấp sẵn folder `venv` (!Lưu ý: môi trường này dùng Python 3.12). Tuy nhiên, nếu bạn muốn tạo lại môi trường mới thì hãy xóa thư mục `venv` cũ trước rồi thực hiện các bước sau:
     ```bash
