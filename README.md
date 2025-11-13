@@ -13,25 +13,23 @@
     cd CSAI
     ```
 2.  **Cài đặt các Thư viện cần thiết:**
-    Nhóm cung cấp sẵn `venv` (không cần cài lại), tuy nhiên nếu cài lại môi trường thì
+    Nếu bạn dùng venv, nhóm cung cấp sẵn folder `venv` (!Lưu ý: môi trường này dùng Python 3.12). Tuy nhiên, nếu bạn muốn tạo lại môi trường mới thì hãy xóa thư mục `venv` cũ trước rồi thực hiện các bước sau:
     ```bash
     python3 -m venv venv
     pip install -r requirements.txt
-    ```
-
-3.  **Kích hoạt Môi trường ảo:**
-    ```bash
-    # Kích hoạt môi trường ảo (làm mỗi khi mở terminal mới)
     # Trên Windows:
-    # .\venv\bin\activate
+    .\venv\bin\activate
     # Trên macOS/Linux:
-    source venv/bin/activate
+    # source venv/bin/activate
     ```
-    Sau khi kích hoạt, bạn sẽ thấy `(venv)` xuất hiện ở đầu dòng lệnh.
+    Nếu bạn dùng conda
+    ```bash
+    conda create -n csai python==3.12 -y
+    conda activate csai
+    ```
 
 ### Chạy Ứng dụng
 
-Sau khi đã cài đặt xong, đảm bảo môi trường ảo vẫn đang được kích hoạt và chạy lệnh sau:
 ```bash
 python3 main.py
 ```
