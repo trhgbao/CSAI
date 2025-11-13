@@ -12,26 +12,22 @@
     git clone https://github.com/trhgbao/CSAI.git
     cd CSAI
     ```
-
-2.  **Tạo và Kích hoạt Môi trường ảo:**
-    Việc sử dụng môi trường ảo là cực kỳ quan trọng để tránh xung đột thư viện.
+2.  **Cài đặt các Thư viện cần thiết:**
+    Nhóm cung cấp sẵn `venv` (không cần cài lại), tuy nhiên nếu cài lại môi trường thì
     ```bash
-    # Tạo môi trường ảo (chỉ làm một lần)
     python3 -m venv venv
+    pip install -r requirements.txt
+    ```
 
+3.  **Kích hoạt Môi trường ảo:**
+    ```bash
     # Kích hoạt môi trường ảo (làm mỗi khi mở terminal mới)
     # Trên Windows:
-    # .\venv\Scripts\activate
+    # .\venv\bin\activate
     # Trên macOS/Linux:
     source venv/bin/activate
     ```
     Sau khi kích hoạt, bạn sẽ thấy `(venv)` xuất hiện ở đầu dòng lệnh.
-
-3.  **Cài đặt các Thư viện cần thiết:**
-    Tất cả các thư viện cần thiết đã được liệt kê trong file `requirements.txt`. Chạy lệnh sau để cài đặt chúng tự động:
-    ```bash
-    pip install -r requirements.txt
-    ```
 
 ### Chạy Ứng dụng
 
