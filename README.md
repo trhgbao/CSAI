@@ -1,18 +1,19 @@
 ## Hướng dẫn Cài đặt và Chạy chương trình
 
 ### Yêu cầu
-- Python 3.8+
-- `pip` và `venv` (thường đi kèm với Python)
+- Python 3.12
+- `pip` và `venv` (thường đi kèm với Python) hoặc conda
 
 ### Các bước Cài đặt
 
-1.  **Tải mã nguồn về:**
-    Tải dự án từ GitHub về máy tính của bạn. Bạn có thể tải dưới dạng file `.zip` hoặc dùng `git`:
+1.  **Tải source code:**
     ```bash
     git clone https://github.com/trhgbao/CSAI.git
     cd CSAI
     ```
-2.  **Cài đặt các Thư viện cần thiết:**
+2. **Test cases:**
+   Các testcase lưu trong mục `problems/test_cases`
+4.  **Cài đặt các Thư viện cần thiết:**
     Nếu bạn dùng venv, nhóm cung cấp sẵn folder `venv` (!Lưu ý: môi trường này dùng Python 3.12). Tuy nhiên, nếu bạn muốn tạo lại môi trường mới thì hãy xóa thư mục `venv` cũ trước rồi thực hiện các bước sau:
     ```bash
     python3 -m venv venv
