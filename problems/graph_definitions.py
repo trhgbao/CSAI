@@ -5,7 +5,7 @@ import os
 def load_graphs_from_files():
     """
     Quét thư mục 'test_cases', đọc các file .txt và tạo đồ thị.
-    Các đồ thị trả về sẽ được chuẩn hóa để có các đỉnh được đánh số liên tục từ 0.
+    Các đồ thị input là 1-based.  Đồ thị trả về sẽ được đánh số từ 0.
     """
     graphs = {}
     current_dir = os.path.dirname(__file__)
@@ -45,8 +45,7 @@ def load_graphs_from_files():
 
 def get_graph_coloring_fitness(graph, colors):
     """
-    Hàm đánh giá chất lượng của một lời giải tô màu.
-    (Hàm này không thay đổi)
+    Hàm đánh giá chất lượng của một lời giải tô màu bằng cách đếm số conflict.
     """
     conflicts = 0
     for u, v in graph.edges():

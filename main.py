@@ -21,7 +21,7 @@ from algorithms.traditional_solvers import (
 )
 from algorithms.pso_solver import ParticleSwarmOptimizationSphere # Đã sửa tên lớp PSO
 from algorithms.pso_gc_solver import PSOGraphColoring
-from algorithms.aco_solver import AntColonyOptimizationGraphColoring
+from algorithms.aco_solver import ACO_GraphColoring
 from algorithms.caco_solver import ContinuousACOSphere
 from algorithms.abc_solver import ArtificialBeeColonyGraphColoring, ArtificialBeeColonySphere 
 from algorithms.fa_solver import FireflyAlgorithmSphere, FireflyAlgorithmGraphColoring
@@ -196,10 +196,10 @@ class AlgorithmVisualizer:
                 specific_params = {"Initial Temp": "1000", "Cooling Rate": "0.99"}
             elif algorithm_name == "Genetic Algorithm":
                 specific_params = {"Mutation Rate": "0.05", "Crossover Rate": "0.8"}
-            elif algorithm_name == "ACO (DSATUR)":
+            elif algorithm_name == "ACO (DSATUR)" or algorithm_name == "ACO":
                 common_params["N Pop"] = "40"
                 specific_params = { "Alpha": "1.66", "Beta": "0.8", "Rho (Evaporation)": "0.35",
-                                    "Q (Pheromone)": "100.0", "Gamma (New Color Penalty)": "1e6"}
+                                    "Q (Pheromone)": "100.0", "Gamma": "1e6"}
             elif algorithm_name == "Artificial Bee Colony":
                 specific_params = {"Limit": "100"}
             elif algorithm_name == "Firefly Algorithm":
@@ -600,7 +600,7 @@ class AlgorithmVisualizer:
                 degrees = [d for n, d in self.current_graph.degree()]
                 initial_colors_estimate = max(degrees) + 1 if degrees else 1
 
-                self.algorithm_runner = AntColonyOptimizationGraphColoring(
+                self.algorithm_runner = ACO_GraphColoring(
                     graph=self.current_graph,
                     n_colors=initial_colors_estimate, # Số màu tối đa cho kiến chọn
                     n_ants=int(params["N Pop"]),
@@ -610,11 +610,29 @@ class AlgorithmVisualizer:
                     rho=float(params["Rho (Evaporation)"]),
                     q=float(params["Q (Pheromone)"]),
                     use_dsatur=True,
-                    gamma=float(params["Gamma (New Color Penalty)"]),
-                    penalty_weight=int(params["Penalty Weight"])
+                    gamma=float(params["Gamma"]),
+                    # penalty_weight=int(params["Penalty Weight"])
                 )
                 is_implemented = True
+            elif algorithm == "ACO":
+                # ACO solver cần n_colors ban đầu, có thể ước tính từ bậc của đồ thị
+                degrees = [d for n, d in self.current_graph.degree()]
+                initial_colors_estimate = max(degrees) + 1 if degrees else 1
 
+                self.algorithm_runner = ACO_GraphColoring(
+                    graph=self.current_graph,
+                    n_colors=initial_colors_estimate, # Số màu tối đa cho kiến chọn
+                    n_ants=int(params["N Pop"]),
+                    n_iter=int(params["N Iter"]), # n_iter không dùng trong init của ACO solver, nhưng giữ để đồng bộ
+                    alpha=float(params["Alpha"]),
+                    beta=float(params["Beta"]),
+                    rho=float(params["Rho (Evaporation)"]),
+                    q=float(params["Q (Pheromone)"]),
+                    use_dsatur=False,
+                    gamma=float(params["Gamma"]),
+                    # penalty_weight=int(params["Penalty Weight"])
+                )
+                is_implemented = True
             elif algorithm == "Firefly Algorithm":
                 self.algorithm_runner = FireflyAlgorithmGraphColoring(
                     graph=self.current_graph,
