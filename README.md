@@ -34,8 +34,7 @@
     conda activate csai
     ```
 
-### Chạy Ứng dụng
-
+### Chạy tkinter GUI kết hợp matplotlib để hiển thị
 ```bash
 python3 main.py
 ```
