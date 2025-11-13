@@ -1,41 +1,40 @@
 ## Hướng dẫn Cài đặt và Chạy chương trình
 
 ### Yêu cầu
-- Python 3.8+
-- `pip` và `venv` (thường đi kèm với Python)
+- Python 3.12
+- `pip` và `venv` (thường đi kèm với Python) hoặc conda
 
 ### Các bước Cài đặt
 
-1.  **Tải mã nguồn về:**
-    Tải dự án từ GitHub về máy tính của bạn. Bạn có thể tải dưới dạng file `.zip` hoặc dùng `git`:
+1.  **Tải source code:**
     ```bash
     git clone https://github.com/trhgbao/CSAI.git
     cd CSAI
     ```
-
-2.  **Tạo và Kích hoạt Môi trường ảo:**
-    Việc sử dụng môi trường ảo là cực kỳ quan trọng để tránh xung đột thư viện.
+2. **Test cases:**
+   Các testcase lưu trong mục `problems/test_cases` dưới dạng file `.txt`. Nếu bạn thêm testcase mới đảm bảo testcase của bạn đúng định dạng và 1-based:
+   ```bash
+   vertices edges
+   1 2
+   1 3
+   ```
+4.  **Cài đặt các Thư viện cần thiết:**
+    Nếu bạn dùng venv, nhóm cung cấp sẵn folder `venv` (!Lưu ý: môi trường này dùng Python 3.12). Tuy nhiên, nếu bạn muốn tạo lại môi trường mới thì hãy xóa thư mục `venv` cũ trước rồi thực hiện các bước sau:
     ```bash
-    # Tạo môi trường ảo (chỉ làm một lần)
     python3 -m venv venv
-
-    # Kích hoạt môi trường ảo (làm mỗi khi mở terminal mới)
-    # Trên Windows:
-    # .\venv\Scripts\activate
-    # Trên macOS/Linux:
-    source venv/bin/activate
-    ```
-    Sau khi kích hoạt, bạn sẽ thấy `(venv)` xuất hiện ở đầu dòng lệnh.
-
-3.  **Cài đặt các Thư viện cần thiết:**
-    Tất cả các thư viện cần thiết đã được liệt kê trong file `requirements.txt`. Chạy lệnh sau để cài đặt chúng tự động:
-    ```bash
     pip install -r requirements.txt
+    # Trên Windows:
+    .\venv\bin\activate
+    # Trên macOS/Linux:
+    # source venv/bin/activate
+    ```
+    Nếu bạn dùng conda
+    ```bash
+    conda create -n csai python==3.12 -y
+    conda activate csai
     ```
 
-### Chạy Ứng dụng
-
-Sau khi đã cài đặt xong, đảm bảo môi trường ảo vẫn đang được kích hoạt và chạy lệnh sau:
+### Chạy tkinter GUI kết hợp matplotlib để hiển thị
 ```bash
 python3 main.py
 ```
