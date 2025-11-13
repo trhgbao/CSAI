@@ -9,10 +9,9 @@
 1.  **Tải mã nguồn về:**
     Tải dự án từ GitHub về máy tính của bạn. Bạn có thể tải dưới dạng file `.zip` hoặc dùng `git`:
     ```bash
-    git clone https://github.com/YourUsername/YourRepositoryName.git
-    cd YourRepositoryName
+    git clone https://github.com/trhgbao/CSAI.git
+    cd CSAI
     ```
-    *(Lưu ý: Thay `YourUsername/YourRepositoryName` bằng đường dẫn thực tế đến kho chứa GitHub của bạn).*
 
 2.  **Tạo và Kích hoạt Môi trường ảo:**
     Việc sử dụng môi trường ảo là cực kỳ quan trọng để tránh xung đột thư viện.
