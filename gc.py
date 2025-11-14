@@ -84,7 +84,7 @@ def main():
             seed=cfg.get("seed", 42)
         )
 
-        best_coloring, used_colors, history = ga.run(verbose=cfg.get("verbose", False))
+        best_coloring, used_colors, history = ga.run(verbose=cfg.get("verbose"))
         print("\nBest number of colors:", used_colors)
 
     elif algo_name == "pso":
