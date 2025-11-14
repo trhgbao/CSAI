@@ -33,6 +33,7 @@ class PSO:
         self.global_best_fitness = float('inf')
 
         self.history = []   # <= thêm lưu lịch sử
+        self.history_3d = {}
 
     def sphere(self, x):
         return np.sum(x ** 2)
@@ -43,6 +44,8 @@ class PSO:
             if p.best_fitness < self.global_best_fitness:
                 self.global_best_fitness = p.best_fitness
                 self.global_best = p.position.copy()
+        
+        self.history_3d[0] = np.array([p.position.copy() for p in self.swarm])
 
         for it in range(self.max_iter):
             for p in self.swarm:
@@ -64,6 +67,9 @@ class PSO:
 
             self.history.append(self.global_best_fitness)   # <= lưu lại
 
+            if (it + 1) % 25 == 0 and it < 100:
+                self.history_3d[it] = np.array([p.position.copy() for p in self.swarm])
+            
             if self.global_best_fitness < self.tol:
                 break
 
@@ -82,3 +88,25 @@ class PSO:
         plt.tight_layout()
         plt.savefig(img_path, dpi=300)
         plt.show()
+
+    def plot_swarm_3D(self):
+        for it, pos in self.history_3d.items():
+            fig = plt.figure(figsize=(6,6))
+            ax = fig.add_subplot(111, projection='3d')
+
+            xs = pos[:,0]
+            ys = pos[:,1]
+            zs = pos[:,2]
+
+            ax.scatter(xs, ys, zs, c='red', s=40)
+
+            ax.set_xlim(-5.12, 5.12)
+            ax.set_ylim(-5.12, 5.12)
+            ax.set_zlim(-5.12, 5.12)
+
+            ax.set_title(f"Iteration {it}")
+            ax.set_xlabel("x")
+            ax.set_ylabel("y")
+            ax.set_zlabel("z")
+
+            plt.show()

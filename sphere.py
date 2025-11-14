@@ -114,6 +114,8 @@ def run_pso(cfg):
     )
     best_fitness, best_solution = pso.optimize()
     pso.visualize(img_path=cfg["plot_path"])
+    if cfg["dim"] == 3:
+        pso.plot_swarm_3D()
     print(f"best solution: {best_solution}")
     print(f"best fitness: {best_fitness}")
 

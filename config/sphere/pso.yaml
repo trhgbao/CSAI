@@ -1,5 +1,5 @@
 
-dim: 30
-max_iter: 50000
+dim: 3
+max_iter: 100
 
 plot_path: "result/pso.png"
