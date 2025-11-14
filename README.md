@@ -45,10 +45,12 @@ Các file config (biến và testcase graph_file) của các thuật toán nằm
 python3 gc.py --algo <algo>
 ```
 #### 3. Ví dụ
-Để chạy thuật toán ACO cho bài toán Graph Coloring: Cần điều chỉnh `config/gc/aco.yaml`.
+Để chạy thuật toán Annealing cho bài toán Graph Coloring: Cần điều chỉnh `config/gc/annealing.yaml`.
 ```bash
-python3 gc.py --algo aco
+python3 gc.py --algo annealing
 ```
+Demo
+![Demo PSO Visualization](result/annealing.png)
 
 ### Sphere Function
 #### 1. Config 
