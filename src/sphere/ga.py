@@ -3,12 +3,11 @@ import matplotlib.pyplot as plt
 import random
 import time
 
-# =========================
-#  Genetic Algorithm (GA)
-# =========================
+def sphere_function(x):
+    return np.sum(x ** 2)
 
 class GeneticAlgorithm:
-    def __init__(self, func, dim, bounds, n_pop=50, 
+    def __init__(self, dim, bounds, n_pop=50, func=sphere_function,
                  crossover_rate=0.8, mutation_rate=0.05, mutation_strength=0.1,
                  n_elite=2, tournament_size=3,
                  max_iter=100, seed=None):
@@ -61,8 +60,8 @@ class GeneticAlgorithm:
         return individual
 
     def optimize(self, verbose=False):
-        best_values = []
-        
+        self.history = []
+        t0 = time.time()
         # Tìm nghiệm tốt nhất ban đầu
         best_idx = np.argmin(self.fitness)
         global_best_f = self.fitness[best_idx]
@@ -110,58 +109,25 @@ class GeneticAlgorithm:
                 global_best_f = self.fitness[current_best_idx]
                 global_best_x = self.population[current_best_idx].copy()
             
-            best_values.append(global_best_f)
+            self.history.append(global_best_f)
             if verbose:
                 print(f"Iter {it+1}/{self.max_iter} | Best = {global_best_f:.6f}")
             
             if global_best_f < float(10 ** (-6)):
                 break
+        self.global_best_x = global_best_x
+        self.global_best_f = global_best_f
+        t1 = time.time()
+        self.elapsed_time = t1 - t0
+        return global_best_x, global_best_f
 
-        return global_best_x, global_best_f, best_values
-
-# =========================
-#  Test with Sphere Function
-# =========================
-def sphere(x):
-    return np.sum(x ** 2)
-
-bounds = [-5.12, 5.12]
-
-# Thông số
-for dim in [5, 10, 20, 40, 60, 80, 100]:
-
-
-    # Thử nghiệm Genetic Algorithm
-    t0 = time.time()
-    ga = GeneticAlgorithm(
-        func=sphere,
-        dim=dim,
-        bounds=bounds,
-        n_pop=400,
-        crossover_rate=0.8,
-        mutation_rate=0.02,
-        mutation_strength=0.1,
-        n_elite=5,
-        tournament_size=3,
-        max_iter=1000,
-        seed=42
-    )
-
-    best_x, best_f, history = ga.optimize(verbose=False)
-
-    t1 = time.time()
-    elapsed_time = t1 - t0
-    print("Time: ", elapsed_time)
-    print("\nBest solution found:", best_x)
-    print("Best fitness:", best_f)
-
-    # Vẽ đường hội tụ
-    plt.figure(figsize=(8, 10))
-    plt.plot(history)
-    plt.xlabel('Iteration')
-    plt.ylabel('Best Fitness')
-    plt.title(f"Dim: {dim} | Best Fitness: {best_f:.4e} | Time: {elapsed_time:.4}s")
-    plt.grid(True)
-    plt.tight_layout(rect=[0, 0, 1, 1])
-    plt.savefig(f"ga_{dim}.png", dpi=300)
-    plt.show()
+    def visualize(self, img_path):
+        plt.figure(figsize=(8, 10))
+        plt.plot(self.history)
+        plt.xlabel('Iteration')
+        plt.ylabel('Best Fitness')
+        plt.title(f"Dim: {self.dim} | Best Fitness: {self.global_best_f:.4e} | Time: {self.elapsed_time:.4}s")
+        plt.grid(True)
+        plt.tight_layout(rect=[0, 0, 1, 1])
+        plt.savefig(img_path, dpi=300)
+        plt.show()

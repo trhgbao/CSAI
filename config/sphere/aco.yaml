@@ -1,0 +1,11 @@
+dim: 3
+bounds: [-5.12, 5.12]
+n_ants: 30
+n_archive: 30
+q: 0.05
+xi: 0.85
+max_iter: 12
+use_roulette: true
+seed: 42
+
+plot_path: "result/aco.png"

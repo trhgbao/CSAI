@@ -66,12 +66,4 @@ class PSO:
 
         return self.global_best_fitness, self.global_best
 
-if __name__ == "__main__":
-    dim = 300
-    print(f"\n=== Running PSO for dim={dim} ===")
-    start = time.time()
-    pso = PSO(dim=dim, max_iter=50000)
-    best_fitness, best_position = pso.optimize()
-    end = time.time()
-    print(f"Best fitness: {best_fitness}")
-    print(f"Time: {end - start:.2f} s")
+    

@@ -3,12 +3,11 @@ import matplotlib.pyplot as plt
 import random
 import time
 
-# =========================
-#  Continuous ACO (C-ACO)
-# =========================
+def sphere_function(x):
+    return np.sum(x ** 2)
 
 class ContinuousACO:
-    def __init__(self, func, dim, bounds, n_ants=20, n_archive=30,
+    def __init__(self, dim, bounds, func=sphere_function, n_ants=20, n_archive=30,
                  q=0.1, xi=0.85,  # Các tham số mới thay cho alpha và evaporation_rate
                  max_iter=100, use_roulette=True, seed=None):
         if seed is not None:
@@ -33,6 +32,7 @@ class ContinuousACO:
         sorted_indices = np.argsort(self.archive_fitness)
         self.archive = self.archive[sorted_indices]
         self.archive_fitness = self.archive_fitness[sorted_indices]
+        self.history = []
 
     def _calculate_weights(self):
         """Tính trọng số cho các nghiệm trong archive dựa trên thứ hạng."""
@@ -43,7 +43,8 @@ class ContinuousACO:
         return weights / np.sum(weights)
 
     def optimize(self, verbose=False):
-        best_values = []
+        t0 = time.time()
+        self.history = []
         global_best_f = self.archive_fitness[0]
 
         for it in range(self.max_iter):
@@ -89,55 +90,27 @@ class ContinuousACO:
             if self.archive_fitness[0] < global_best_f:
                 global_best_f = self.archive_fitness[0]
             
-            best_values.append(global_best_f)
+            self.history.append(global_best_f)
             if verbose:
                 print(f"Iter {it+1}/{self.max_iter} | Best = {global_best_f:.6f}")
+        
+        t1 = time.time()
+        self.elapsed_time = t1 - t0
+        return self.archive[0], self.archive_fitness[0]
+    
+    def visualize(self, img_path): 
+        best_x = self.archive[0].copy()
+        best_f = self.archive_fitness[0]
+        # Vẽ đường hội tụ
+        plt.figure(figsize=(8, 10))
+        plt.plot(self.history)
+        plt.xlabel('Iteration')
+        plt.ylabel('Best Fitness')
+        plt.title(f"Dim: {self.dim} | Best Fitness: {best_f:.4e} | Time: {self.elapsed_time:.4}s")
+        # plt.legend()
+        plt.tight_layout(rect=[0, 0, 1, 1])
+        plt.grid(True)
+        # plt.savefig(f"caco_{dim}.png", dpi=300)
+        plt.savefig(img_path, dpi=300)
+        plt.show()
 
-        return self.archive[0], self.archive_fitness[0], best_values
-
-# =========================
-#  Test with Sphere Function
-# =========================
-def sphere(x):
-    return np.sum(x ** 2)
-
-
-bounds = [-5.12, 5.12]
-
-# Thông số
-dim = 3
-# Thử nghiệm ACO với triển khai đã sửa đổi
-t0 = time.time()
-aco = ContinuousACO(
-    func=sphere,
-    dim=dim,
-    bounds=bounds,
-    n_ants=30,
-    n_archive=30,
-    q=0.05,      # Tham số q cho việc tính trọng số
-    xi=0.85,    # Tham số xi (tương tự evaporation)
-    max_iter=12,
-    use_roulette=True,
-    seed=42
-)
-
-best_x, best_f, history = aco.optimize(verbose=False)
-
-t1 = time.time()
-elapsed_time = t1 - t0
-print("Time: ", elapsed_time)
-print("\nBest solution found:", best_x)
-print("Best fitness:", best_f)
-
-# Vẽ đường hội tụ
-plt.figure(figsize=(8, 10))
-plt.plot(history)
-plt.xlabel('Iteration')
-plt.ylabel('Best Fitness')
-plt.title(f"Dim: {dim} | Best Fitness: {best_f:.4e} | Time: {elapsed_time:.4}s")
-# plt.legend()
-plt.tight_layout(rect=[0, 0, 1, 1])
-plt.grid(True)
-plt.savefig(f"caco_{dim}.png", dpi=300)
-plt.savefig(f"aco_sphere_slow_convergence.png", dpi=300)
-plt.show()

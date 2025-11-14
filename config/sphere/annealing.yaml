@@ -1,0 +1,11 @@
+dim: 3
+bounds: [-5.12, 5.12]
+
+T0: 200
+T_min: 0.01
+alpha: 0.95
+
+max_iter: 150
+step_size: 1.5
+
+plot_path: "result/annealing.png"

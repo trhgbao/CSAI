@@ -1,0 +1,8 @@
+dim: 3
+bounds: [-5.12, 5.12]
+
+SN: 50          # Colony size
+max_iter: 20000
+limit: 50       # Abandonment limit
+
+plot_path: "result/abc.png"

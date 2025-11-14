@@ -1,0 +1,14 @@
+dim: 3
+bounds: [-5.12, 5.12]
+
+n_pop: 400
+crossover_rate: 0.8
+mutation_rate: 0.02
+mutation_strength: 0.1
+n_elite: 5
+tournament_size: 3
+
+max_iter: 1000
+seed: 42
+
+plot_path: "result/ga.png"
