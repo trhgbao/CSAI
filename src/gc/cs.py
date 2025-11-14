@@ -1,22 +1,10 @@
 import numpy as np
 import time
-<<<<<<< Updated upstream
-=======
 import matplotlib.pyplot as plt
->>>>>>> Stashed changes
 import math
 
 class CuckooGraphColoring:
     def __init__(self,
-<<<<<<< Updated upstream
-                 pop_size=50,
-                 max_gen=200,
-                 p_abandon=0.25,
-                 penalty_weight=1000,
-                 local_steps=50,
-                 levy_beta=1.5,
-                 dsatur_ratio=0.8):
-=======
                 pop_size=50,
                 max_gen=200,
                 p_abandon=0.25,
@@ -24,7 +12,6 @@ class CuckooGraphColoring:
                 local_steps=50,
                 levy_beta=1.5,
                 dsatur_ratio=0.8):
->>>>>>> Stashed changes
 
         self.POP_SIZE = pop_size
         self.MAX_GEN = max_gen
@@ -33,15 +20,10 @@ class CuckooGraphColoring:
         self.LOCAL_STEPS = local_steps
         self.LEVY_BETA = levy_beta
         self.DSATUR_RATIO = dsatur_ratio
-<<<<<<< Updated upstream
-=======
         self.history = None
         self.graph_name = None
->>>>>>> Stashed changes
 
-    # ---------------------------------------------------------
-    # DSATUR heuristic
-    # ---------------------------------------------------------
+
     def dsatur_coloring(self, num_vertices, adj_list):
         degrees = np.array([len(adj) for adj in adj_list])
         colors = np.full(num_vertices, -1, dtype=int)
@@ -79,9 +61,7 @@ class CuckooGraphColoring:
 
         return colors, len(np.unique(colors))
 
-    # ---------------------------------------------------------
-    # Fitness function
-    # ---------------------------------------------------------
+
     def calculate_fitness(self, solution, adj_list):
         num_colors = len(np.unique(solution))
         num_conflicts = 0
@@ -94,9 +74,7 @@ class CuckooGraphColoring:
         fitness_score = num_colors + self.PENALTY_WEIGHT * num_conflicts
         return fitness_score, num_colors, num_conflicts
 
-    # ---------------------------------------------------------
-    # Levy flight step size
-    # ---------------------------------------------------------
+
     def get_levy_step_size(self, beta, num_vertices):
         gamma_beta = math.gamma(1 + beta)
         sin_pi_beta = math.sin(math.pi * beta / 2)
@@ -112,9 +90,7 @@ class CuckooGraphColoring:
 
         return max(1, min(step_size, num_vertices // 2))
 
-    # ---------------------------------------------------------
-    # Discrete Levy flight
-    # ---------------------------------------------------------
+
     def discrete_levy_flight(self, solution, max_colors, num_vertices):
         new_solution = solution.copy()
         num_to_change = self.get_levy_step_size(self.LEVY_BETA, num_vertices)
@@ -125,9 +101,7 @@ class CuckooGraphColoring:
         new_solution[indices_to_change] = new_colors
         return new_solution
 
-    # ---------------------------------------------------------
-    # Local search
-    # ---------------------------------------------------------
+
     def local_search_intensification(self, solution, adj_list, max_steps):
         improved = solution.copy()
         _, _, current_conflicts = self.calculate_fitness(improved, adj_list)
@@ -175,9 +149,7 @@ class CuckooGraphColoring:
 
         return improved
 
-    # ---------------------------------------------------------
-    # Modified Cuckoo Search
-    # ---------------------------------------------------------
+
     def modified_cuckoo_search(self, num_vertices, adj_list):
         max_colors = num_vertices
         population = [np.random.randint(0, max_colors, size=num_vertices) for _ in range(self.POP_SIZE)]
@@ -185,10 +157,6 @@ class CuckooGraphColoring:
 
         best_fit = float('inf')
         best_sol = None
-<<<<<<< Updated upstream
-
-        for gen in range(self.MAX_GEN):
-=======
         
         convergence_history = {'best': [], 'average': [], 'worst': []}
 
@@ -198,7 +166,6 @@ class CuckooGraphColoring:
             convergence_history['average'].append(np.mean(current_fits))
             convergence_history['worst'].append(np.max(current_fits))
 
->>>>>>> Stashed changes
             i = np.random.randint(0, self.POP_SIZE)
             cuckoo = self.discrete_levy_flight(population[i], max_colors, num_vertices)
             cuckoo_fit, _, _ = self.calculate_fitness(cuckoo, adj_list)
@@ -217,25 +184,16 @@ class CuckooGraphColoring:
                 best_sol = population[best_idx]
 
             best_in_gen = population[best_idx]
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
             for idx in sorted_idx[-num_abandon:]:
                 refined = self.local_search_intensification(best_in_gen, adj_list, self.LOCAL_STEPS)
                 population[idx] = refined
                 fitness_scores[idx] = self.calculate_fitness(refined, adj_list)
 
-<<<<<<< Updated upstream
-=======
         self.history = convergence_history
->>>>>>> Stashed changes
         _, final_colors, final_conflicts = self.calculate_fitness(best_sol, adj_list)
         return final_colors, final_conflicts, best_sol
 
-    # ---------------------------------------------------------
-    # Cuckoo Search with DSATUR initialization
-    # ---------------------------------------------------------
+
     def cuckoo_search_with_dsatur_init(self, num_vertices, adj_list):
         population = []
         num_dsatur = int(self.POP_SIZE * self.DSATUR_RATIO)
@@ -251,10 +209,6 @@ class CuckooGraphColoring:
         fitness_scores = [self.calculate_fitness(sol, adj_list) for sol in population]
         best_fit = float('inf')
         best_sol = None
-<<<<<<< Updated upstream
-
-        for gen in range(self.MAX_GEN):
-=======
         
         convergence_history = {'best': [], 'average': [], 'worst': []}
 
@@ -264,7 +218,6 @@ class CuckooGraphColoring:
             convergence_history['average'].append(np.mean(current_fits))
             convergence_history['worst'].append(np.max(current_fits))
 
->>>>>>> Stashed changes
             i = np.random.randint(0, self.POP_SIZE)
             cuckoo = self.discrete_levy_flight(population[i], max_colors, num_vertices)
             cuckoo_fit, _, _ = self.calculate_fitness(cuckoo, adj_list)
@@ -283,19 +236,10 @@ class CuckooGraphColoring:
                 best_sol = population[best_idx]
 
             best_in_gen = population[best_idx]
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
             for idx in sorted_idx[-num_abandon:]:
                 refined = self.local_search_intensification(best_in_gen, adj_list, self.LOCAL_STEPS)
                 population[idx] = refined
                 fitness_scores[idx] = self.calculate_fitness(refined, adj_list)
-<<<<<<< Updated upstream
-
-        _, final_colors, final_conflicts = self.calculate_fitness(best_sol, adj_list)
-        return final_colors, final_conflicts, best_sol
-=======
                 
         self.history = convergence_history
         _, final_colors, final_conflicts = self.calculate_fitness(best_sol, adj_list)
@@ -323,4 +267,3 @@ class CuckooGraphColoring:
             plt.savefig(img_path, dpi=300)
             print(f"Đã lưu biểu đồ vào: {img_path}")
             plt.show()
->>>>>>> Stashed changes
