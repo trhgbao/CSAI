@@ -36,29 +36,29 @@
     ```
 
 ### Graph Coloring 
-Config nằm trong folder tương ứng `config/gc/`
-
-Ví dụ: Để chạy thuật toán ACO cho bài toán Graph Coloring. Cần điều chỉnh `config/gc/aco.yaml`.
-```bash
-# python3 gc.py --algo aco
-```
-
-#### Tổng quát
+#### Config 
+Các file config của các thuật toán nằm trong folder tương ứng `config/gc/`
+#### Hướng dẫn chạy
 Điều chỉnh `config/gc/<aco>.yaml`
 ```bash
 python3 gc.py --algo <algo>
 ```
-
-### Sphere Function
-Config nằm trong folder tương ứng `config/sphere/`
-
-Ví dụ: Để chạy thuật toán ACO cho bài toán Sphere Function. Cần điều chỉnh `config/sphere/aco.yaml`.
+#### Ví dụ
+Để chạy thuật toán ACO cho bài toán Graph Coloring: Cần điều chỉnh `config/gc/aco.yaml`.
 ```bash
-# python3 sphere.py --algo aco
+python3 gc.py --algo aco
 ```
 
-#### Tổng quát
+### Sphere Function
+#### Config 
+Các file config của các thuật toán nằm trong folder tương ứng `config/sphere/`
+#### Hướng dẫn chạy
 Điều chỉnh `config/sphere/<aco>.yaml`
 ```bash
 python3 sphere.py --algo <algo>
+```
+#### Ví dụ
+Để chạy thuật toán ACO cho bài toán Sphere Function: Cần điều chỉnh `config/sphere/aco.yaml`.
+```bash
+python3 sphere.py --algo aco
 ```
