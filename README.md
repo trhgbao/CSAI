@@ -33,6 +33,7 @@
     ```bash
     conda create -n csai python==3.12 -y
     conda activate csai
+    pip install -r requirements.txt
     ```
 
 ### Graph Coloring 
