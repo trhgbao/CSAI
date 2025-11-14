@@ -2,7 +2,7 @@
 
 ### Yêu cầu
 - Python 3.12
-- `pip` và `venv` (thường đi kèm với Python) hoặc conda
+- `pip` và `venv` hoặc `conda`
 
 ### Các bước Cài đặt
 
@@ -19,6 +19,7 @@
    1 3
    ```
 4.  **Cài đặt các Thư viện cần thiết:**
+    #### Cách 1: venv
     Nếu bạn dùng venv, nhóm cung cấp sẵn folder `venv` (!Lưu ý: môi trường này dùng Python 3.12). Tuy nhiên, nếu bạn muốn tạo lại môi trường mới thì hãy xóa thư mục `venv` cũ trước rồi thực hiện các bước sau:
     ```bash
     python3 -m venv venv
@@ -28,32 +29,36 @@
     # Trên macOS/Linux:
     # source venv/bin/activate
     ```
-    Nếu bạn dùng conda
+    #### Cách 2: conda
     ```bash
     conda create -n csai python==3.12 -y
     conda activate csai
     ```
 
-### Config
-#### Graph Coloring 
+### Graph Coloring 
 Config nằm trong folder tương ứng `config/gc/`
+
 Ví dụ: Để chạy thuật toán ACO cho bài toán Graph Coloring. Cần điều chỉnh `config/gc/aco.yaml`.
-
-#### Sphere Function 
-Config nằm trong folder tương ứng `config/sphere/`
-Ví dụ: Để chạy thuật toán Coninuous ACO cho bài toán Sphere Function. Cần điều chỉnh `config/sphere/aco.yaml`.
-
-### Chạy thuật toán 
-#### Graph Coloring 
-Thay đổi config file trong `config/gc/<algo>.yaml`
 ```bash
-python3 gc.py --algo <algo>
 # python3 gc.py --algo aco
 ```
 
-#### Sphere Function
-Thay đổi config file trong `config/sphere/<algo>.yaml`
+#### Tổng quát
+Điều chỉnh `config/gc/<aco>.yaml`
+```bash
+python3 gc.py --algo <algo>
+```
+
+### Sphere Function
+Config nằm trong folder tương ứng `config/sphere/`
+
+Ví dụ: Để chạy thuật toán ACO cho bài toán Sphere Function. Cần điều chỉnh `config/sphere/aco.yaml`.
+```bash
+# python3 sphere.py --algo aco
+```
+
+#### Tổng quát
+Điều chỉnh `config/sphere/<aco>.yaml`
 ```bash
 python3 sphere.py --algo <algo>
-# python3 sphere.py --algo aco
 ```
