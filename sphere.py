@@ -36,6 +36,7 @@ def run_abc(cfg):
     abc.run()
     end = time.time()
     print(f"\nTotal runtime: {end - start:.4f} seconds")
+    abc.visualize(img_path=cfg["plot_path"])
 
 
 
@@ -110,6 +111,7 @@ def run_pso(cfg):
         max_iter=cfg["max_iter"]
     )
     best_fitness, best_solution = pso.optimize()
+    pso.visualize(img_path=cfg["plot_path"])
     print(f"best solution: {best_solution}")
     print(f"best fitness: {best_fitness}",)
 

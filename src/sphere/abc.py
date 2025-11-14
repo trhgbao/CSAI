@@ -1,6 +1,7 @@
 import numpy as np
 import time
 import random
+import matplotlib.pyplot as plt
 
 
 class ABC_Sphere_NP:
@@ -108,6 +109,10 @@ class ABC_Sphere_NP:
             self.onlookerPhase()
             self.scoutPhase()
             self.memorizeBest()
+            
+            self.history_best.append(self.bestFitness)
+            fx_val = (1.0 / self.bestFitness) - 1.0
+            self.history_fx.append(fx_val)
 
             if it % 50 == 0:
                 print(f"Iter {it}: Best fitness = {self.bestFitness}")
@@ -121,17 +126,18 @@ class ABC_Sphere_NP:
         print(f"Corresponding f(x) = {fx}")  # <-- in ra anh cần
         print("Best Solution:", self.bestX)
 
+    def visualize(self, img_path):
+        if not self.history_best:
+            return
 
-if __name__ == "__main__":
-    random.seed(int(time.time()))
-    np.random.seed(int(time.time()))
-    n = 3
-    SN = 50
-    MAX_ITER = 20000
-    LIMIT = 50
-    lb, ub = -5.12, 5.12
-    start = time.time()  # <---- BẮT ĐẦU ĐO THỜI GIAN
-    abc = ABC_Sphere_NP(n, SN, MAX_ITER, LIMIT, lb, ub)
-    abc.run()
-    end = time.time()  # <---- KẾT THÚC ĐO THỜI GIAN
-    print(f"\nTotal runtime: {end - start:.4f} seconds")
+        plt.figure(figsize=(10, 5))
+        plt.plot(self.history_best, label="Best Fitness", linewidth=2)
+        plt.plot(self.history_fx, label="f(x) = sum(x^2)", linewidth=2)
+        plt.xlabel("Iteration")
+        plt.ylabel("Value")
+        plt.title("ABC Optimization Convergence Curve")
+        plt.grid(True)
+        plt.legend()
+        plt.tight_layout()
+        plt.savefig(img_path, dpi=300)
+        plt.show()

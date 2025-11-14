@@ -1,5 +1,6 @@
 import numpy as np
 import time
+import matplotlib.pyplot as plt
 
 class Particle:
     def __init__(self, dim, x_min, x_max, v_max):
@@ -31,6 +32,8 @@ class PSO:
         self.global_best = np.zeros(dim)
         self.global_best_fitness = float('inf')
 
+        self.history = []   # <= thêm lưu lịch sử
+
     def sphere(self, x):
         return np.sum(x ** 2)
 
@@ -48,9 +51,7 @@ class PSO:
                 p.velocity = (self.w * p.velocity +
                               self.c1 * r1 * (p.best_position - p.position) +
                               self.c2 * r2 * (self.global_best - p.position))
-                # Update position
                 p.position += p.velocity
-                # Evaluate fitness
                 fitness = self.sphere(p.position)
                 if fitness < p.best_fitness:
                     p.best_fitness = fitness
@@ -60,10 +61,24 @@ class PSO:
                     self.global_best = p.position.copy()
 
             print(f"Iter {it}: best fitness = {self.global_best_fitness}")
-            # Early stopping
+
+            self.history.append(self.global_best_fitness)   # <= lưu lại
+
             if self.global_best_fitness < self.tol:
                 break
 
         return self.global_best_fitness, self.global_best
 
-    
+
+    def visualize(self, img_path):
+        if not self.history:
+            return
+        plt.figure(figsize=(8, 5))
+        plt.plot(self.history, linewidth=2)
+        plt.title("PSO Convergence Curve")
+        plt.xlabel("Iteration")
+        plt.ylabel("Best Fitness")
+        plt.grid(True)
+        plt.tight_layout()
+        plt.savefig(img_path, dpi=300)
+        plt.show()
