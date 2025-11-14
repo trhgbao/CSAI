@@ -186,10 +186,47 @@ def run_cs(cfg, graph: Graph):
         levy_beta=cfg["levy_beta"],
         dsatur_ratio=cfg["dsatur_ratio"]
     )
+<<<<<<< Updated upstream
     if not cfg["use_dsatur"]:
         num_colors, num_conflicts, best_solution = model.modified_cuckoo_search(graph.num_vertices, graph.adjacency)
     else:
         num_colors, num_conflicts, best_solution = model.cuckoo_search_with_dsatur_init(graph.num_vertices, graph.adjacency)
+=======
+
+    if not cfg["use_dsatur"]:
+        num_colors, num_conflicts, best_solution = model.modified_cuckoo_search(graph.num_vertices, graph.adjacency)
+        algo_suffix = "mcoa"
+    else:
+        num_colors, num_conflicts, best_solution = model.cuckoo_search_with_dsatur_init(graph.num_vertices, graph.adjacency)
+        algo_suffix = "cs_dsatur"
+
+    end_time = time.time()
+    
+    print("\n--- Cuckoo Search Results ---")
+    print(f"Algorithm: {'CS-DSATUR' if cfg['use_dsatur'] else 'MCOA'}")
+    print(f"Best colors found: {num_colors}")
+    print(f"Remaining conflicts: {num_conflicts}")
+    print(f"Runtime: {end_time - start_time:.6f} s")
+
+    img_save_path = f"result/gc_cs.png"
+    model.visualize(img_save_path, use_dsatur=cfg["use_dsatur"])   
+    start_time = time.time()
+
+    model = CuckooGraphColoring(
+        pop_size=cfg["pop_size"],
+        max_gen=cfg["max_gen"],
+        p_abandon=cfg["p_abandon"],
+        penalty_weight=cfg["penalty_weight"],
+        local_steps=cfg["local_steps"],
+        levy_beta=cfg["levy_beta"],
+        dsatur_ratio=cfg["dsatur_ratio"]
+    )
+    if not cfg["use_dsatur"]:
+        num_colors, num_conflicts, best_solution = model.modified_cuckoo_search(graph.num_vertices, graph.adjacency)
+    else:
+        num_colors, num_conflicts, best_solution
+        n = model.cuckoo_search_with_dsatur_init(graph.num_vertices, graph.adjacency)
+>>>>>>> Stashed changes
 
     end_time = time.time()
     print("\nTotal colors used:", num_colors)
@@ -200,12 +237,17 @@ def run_cs(cfg, graph: Graph):
 def run_hc(cfg, graph: Graph):
     start_time = time.time()
 
+<<<<<<< Updated upstream
     model = HillClimbingColoring(
+=======
+    solver = HillClimbingColoring(
+>>>>>>> Stashed changes
         penalty_weight=cfg["penalty_weight"],
         max_steps=cfg["max_steps"],
         num_restarts=cfg["num_restarts"]
     )
 
+<<<<<<< Updated upstream
     num_colors, num_conflicts = model.improved_hill_climbing(
         graph.num_vertices, graph.adjacency
     )
@@ -216,6 +258,21 @@ def run_hc(cfg, graph: Graph):
     end_time = time.time()
     print(f"Runtime: {end_time - start_time:.6f} s")
 
+=======
+    num_colors, num_conflicts = solver.improved_hill_climbing(graph.num_vertices, graph.adjacency)
+    
+    end_time = time.time()
+
+    print("\n--- Hill Climbing Results ---")
+    print(f"Best colors found: {num_colors}")
+    print(f"Remaining conflicts: {num_conflicts}")
+    print(f"Runtime: {end_time - start_time:.6f} s")
+
+    img_save_path = f"result/gc_hc.png"
+    
+    solver.visualize(img_save_path)
+
+>>>>>>> Stashed changes
 
 
 def main():
