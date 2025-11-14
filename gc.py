@@ -22,7 +22,11 @@ def load_config(name):
     with open(path, "r", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
+
+
 def run_aco(cfg, graph):
+    start_time = time.time()
+
     n_colors = cfg.get("n_colors", "auto")
     if n_colors == "auto":
         n_colors = graph.max_degree + 1
@@ -44,8 +48,14 @@ def run_aco(cfg, graph):
     aco.visuazlie(img_path=cfg.get("plot_path", "result/result.png"))
     print("Best colors:", used)
 
+    end_time = time.time()
+    print(f"Runtime: {end_time - start_time:.6f} s")
+
+
 
 def run_fa(cfg, graph):
+    start_time = time.time()
+
     fa = FireflyAlgorithmGraphColoring(
         graph,
         num_fireflies=cfg["num_fireflies"],
@@ -56,7 +66,14 @@ def run_fa(cfg, graph):
     print("Colors:", best.count_colors(), "| Conflicts:", best.count_conflicts())
     fa.plot_convergence(save_path=cfg.get("plot_path", "result/result.png"))
 
+    end_time = time.time()
+    print(f"Runtime: {end_time - start_time:.6f} s")
+
+
+
 def run_ga(cfg, graph):
+    start_time = time.time()
+
     n_colors = cfg.get("n_colors", "auto")
     if n_colors == "auto":
         n_colors = graph.max_degree + 1
@@ -75,10 +92,15 @@ def run_ga(cfg, graph):
     _, used = ga.run(verbose=cfg.get("verbose", False))
     ga.visuazlie(img_path=cfg.get("plot_path", "result/result.png"))
     print("Best colors:", used)
-    
+
+    end_time = time.time()
+    print(f"Runtime: {end_time - start_time:.6f} s")
+
 
 
 def run_pso(cfg, graph):
+    start_time = time.time()
+
     n_colors = cfg.get("n_colors", "auto")
     if n_colors == "auto":
         n_colors = graph.max_degree + 1
@@ -95,8 +117,14 @@ def run_pso(cfg, graph):
     _, _, _, used = pso.optimize()
     print("Best colors:", used)
 
+    end_time = time.time()
+    print(f"Runtime: {end_time - start_time:.6f} s")
+
+
 
 def run_abc(cfg, graph):
+    start_time = time.time()
+
     abc = ABC_GC(
         n_=graph.num_vertices,
         m_=graph.num_edges,
@@ -107,8 +135,14 @@ def run_abc(cfg, graph):
     )
     abc.run()
 
+    end_time = time.time()
+    print(f"Runtime: {end_time - start_time:.6f} s")
+
+
 
 def run_annealing(cfg, graph):
+    start_time = time.time()
+
     sa = SimulatedAnnealingGraphColoring(
         graph,
         T0=cfg["T0"],
@@ -120,20 +154,30 @@ def run_annealing(cfg, graph):
     print("Best colors:", best.count_colors())
     sa.plot_convergence(save_path=cfg.get("plot_path", "result/result.png"))
 
+    end_time = time.time()
+    print(f"Runtime: {end_time - start_time:.6f} s")
+
+
+
 def run_bfs(cfg, graph: Graph):
-    sdl = cfg["SDL"]
     start_time = time.time()
+
+    sdl = cfg["SDL"]
     if sdl:
         color = bfs_coloring_layer_sorted(graph.num_vertices, graph.adjacency)
     else:
         color = bfs_coloring(graph.num_vertices, graph.adjacency)
+
     end_time = time.time()
-    runtime_sec = end_time - start_time
     min_colors_used = max(color) + 1
     print("\nTotal colors used:", min_colors_used)
-    print(f"Runtime: {runtime_sec:.6f} s")
-    
+    print(f"Runtime: {end_time - start_time:.6f} s")
+
+
+
 def run_cs(cfg, graph: Graph):
+    start_time = time.time()
+
     model = CuckooGraphColoring(
         pop_size=cfg["pop_size"],
         max_gen=cfg["max_gen"],
@@ -143,26 +187,37 @@ def run_cs(cfg, graph: Graph):
         levy_beta=cfg["levy_beta"],
         dsatur_ratio=cfg["dsatur_ratio"]
     )
-    start_time = time.time()
     if not cfg["use_dsatur"]:
         num_colors, num_conflicts, best_solution = model.modified_cuckoo_search(graph.num_vertices, graph.adjacency)
     else:
         num_colors, num_conflicts, best_solution = model.cuckoo_search_with_dsatur_init(graph.num_vertices, graph.adjacency)
+
     end_time = time.time()
     print("\nTotal colors used:", num_colors)
-    print(f"Runtime: {end_time - start_time} s")
-    
+    print(f"Runtime: {end_time - start_time:.6f} s")
+
+
+
 def run_hc(cfg, graph: Graph):
+    start_time = time.time()
+
     model = HillClimbingColoring(
-        penalty_weight = cfg["penalty_weight"],
-        max_steps = cfg["max_steps"],
-        num_restarts = cfg["num_restarts"]
+        penalty_weight=cfg["penalty_weight"],
+        max_steps=cfg["max_steps"],
+        num_restarts=cfg["num_restarts"]
     )
 
-    num_colors, num_conflicts = model.improved_hill_climbing(graph.num_vertices, graph.adjacency)
+    num_colors, num_conflicts = model.improved_hill_climbing(
+        graph.num_vertices, graph.adjacency
+    )
 
     print("Colors =", num_colors)
     print("Conflicts =", num_conflicts)
+
+    end_time = time.time()
+    print(f"Runtime: {end_time - start_time:.6f} s")
+
+
 
 def main():
     parser = argparse.ArgumentParser()
