@@ -113,36 +113,33 @@ def run_annealing(cfg, graph):
     print("Best colors:", best.count_colors())
 
 
-ALGO_DISPATCH = {
-    "aco": run_aco,
-    "fa": run_fa,
-    "ga": run_ga,
-    "pso": run_pso,
-    "abc": run_abc,
-    "annealing": run_annealing,
-}
-
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--algo", required=True, help="Algorithm name")
-    parser.add_argument("--input", help="Graph file override")
 
     args = parser.parse_args()
     algo = args.algo.lower()
 
-    if algo not in ALGO_DISPATCH:
-        raise ValueError(f"Unknown algorithm '{algo}'")
-
-    # Load config
     cfg = load_config(algo)
 
-    # Load graph from config, or override using --input
-    graph_path = args.input if args.input else cfg["graph_file"]
+    graph_path = cfg["graph_file"]
     graph = Graph(file_path=graph_path)
     graph.print_info()
 
-    # Run corresponding algorithm
-    ALGO_DISPATCH[algo](cfg, graph)
+    if algo == "abc":
+        run_abc(cfg, graph)
+    elif algo == "aco":
+        run_aco(cfg, graph)
+    elif algo == "annealing":
+        run_annealing(cfg, graph)
+    elif algo == "fa":
+        run_fa(cfg, graph)
+    elif algo == "ga":
+        run_ga(cfg, graph)
+    elif algo == "pso":
+        run_pso(cfg, graph)
+    else:
+        print(f"Unknown algorithm: {algo}")
 
 
 if __name__ == "__main__":

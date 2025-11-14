@@ -118,7 +118,7 @@ def run_pso(cfg):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--algo", required=True, help="YAML config file")
+    parser.add_argument("--algo", required=True, help="algorithm name")
     args = parser.parse_args()
 
     cfg = load_config(CONFIG_FOLDER / (args.algo + ".yaml"))
@@ -137,7 +137,7 @@ def main():
     elif algo == "pso":
         run_pso(cfg)
     else:
-        raise ValueError(f"Unknown algorithm: {algo}")
+        print(f"Unknown algorithm: {algo}")
 
 
 if __name__ == "__main__":
