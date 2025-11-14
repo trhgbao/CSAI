@@ -10,6 +10,9 @@ from src.sphere.annealing import *
 from src.sphere.fa import *
 from src.sphere.ga import *
 from src.sphere.pso import *
+from src.sphere.cs import *
+from src.sphere.hc import *
+
 from pathlib import Path 
 CONFIG_FOLDER = Path("./config/sphere/")
 
@@ -17,7 +20,6 @@ CONFIG_FOLDER = Path("./config/sphere/")
 def load_config(path):
     with open(path, "r", encoding="utf-8") as f:
         return yaml.safe_load(f)
-
 
 def run_abc(cfg):
     random.seed(time.time())
@@ -116,6 +118,27 @@ def run_pso(cfg):
     print(f"best fitness: {best_fitness}",)
 
 
+
+def run_cs(cfg):
+    optimizer = CuckooSearchHybrid(
+        pop_size=cfg["POP_SIZE"],
+        max_gen=cfg["MAX_GEN"],
+        p_abandon=cfg["P_ABANDON"],
+        levy_beta=cfg["LEVY_BETA"],
+        initial_alpha=cfg["INITIAL_ALPHA"],
+        diversity_rate=cfg["DIVERSITY_RATE"],
+        search_range=cfg["SEARCH_RANGE"]
+    )
+
+    start_time = time.time()
+    best_nest, best_fitness = optimizer.run(cfg["DIM"])
+    end_time = time.time()
+
+    print("Time:", end_time - start_time)
+    print("best nest:", best_nest)
+    print("best fitness:", best_fitness)
+
+    
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--algo", required=True, help="algorithm name")
@@ -136,6 +159,8 @@ def main():
         run_ga(cfg)
     elif algo == "pso":
         run_pso(cfg)
+    elif algo == "cs":
+        run_cs(cfg)
     else:
         print(f"Unknown algorithm: {algo}")
 
