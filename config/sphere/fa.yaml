@@ -1,0 +1,4 @@
+num_fireflies: 40
+max_iterations: 400
+use_dsatur: true
+seed: 42

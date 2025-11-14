@@ -26,7 +26,7 @@ class ACO_GraphColoring:
         self.rho = rho
         self.q = q
         self.use_dsatur = use_dsatur
-        self.gamma = gamma
+        self.gamma = float(gamma)
 
         # pheromone[i][c]
         self.pheromone = np.ones((self.n_nodes, self.n_colors))

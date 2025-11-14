@@ -1,0 +1,8 @@
+n_colors: auto
+population: 100
+generations: 500
+crossover_rate: 0.85
+mutation_rate: 0.01
+elite: 5
+tournament_size: 3
+seed: 42

@@ -1,194 +1,139 @@
+import argparse
+import yaml
 from pathlib import Path
-from src.gc.graph import Graph 
+import time
 
-from src.gc.abc import *
-from src.gc.pso import *
+from src.gc.graph import Graph
+from src.gc.aco import ACO_GraphColoring
+from src.gc.ga import GeneticAlgorithm_GraphColoring
+from src.gc.pso import PSO_Coloring_Real
+from src.gc.abc import ABC_GC
+from src.gc.annealing import SimulatedAnnealingGraphColoring
+from src.gc.fa import FireflyAlgorithmGraphColoring
 
-from src.gc.aco import *
-from src.gc.ga import *
+CONFIG_FOLDER = Path("./config/gc")
 
-from src.gc.annealing import *
-from src.gc.fa import *
+def load_config(path):
+    with open(path, "r", encoding="utf-8") as f:
+        return yaml.safe_load(f)
 
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--algo", required=True, help="Name of algorithm")
+    parser.add_argument("--input", default="./data/myciel3.txt", help="Graph file path")
 
-file_path = Path("./data/200-3991.txt")
-graph = Graph(file_path=file_path)
+    args = parser.parse_args()
 
-# linh
-def abc():
-    random.seed()
+    algo_name = args.algo
+    cfg = load_config(CONFIG_FOLDER / (algo_name + ".yaml"))
 
-    SN = 50
-    LIMIT = 20
-    MAX_ITER = 200
-
-    start = time.time()
-    abc = ABC_GC(n_=graph.num_vertices, m_=graph.num_edges, sn_=SN, limit_=LIMIT, max_iter_=MAX_ITER, adj_=graph.adjacency)
-    abc.run()
-    end = time.time()
-    print("Runtime:", end - start, "seconds")
-    
-
-def pso():
-    max_color = graph.max_degree + 1
-    pso = PSO_Coloring_Real(graph=graph.adjacency, max_color=max_color,
-                            swarm_size=50, max_iter=500,
-                            w=0.7, c1=1.5, c2=1.5)
-
-    start = time.time()
-    best_fitness, best_conf, best_color, used_colors = pso.optimize()
-    end = time.time()
-
-    print("\n=== Kết quả cuối cùng ===")
-    print(f"Best Fitness = {best_fitness}")
-    print(f"Conflicts = {best_conf}")
-    print(f"Number of colors used = {used_colors}")
-    print(f"Coloring = {best_color}")
-    print(f"Time: {end - start:.3f} s")
-
-# kim
-def aco():
-    # Initial colors (k) thường lấy max_degree + 1 (theo lý thuyết đồ thị)
-    initial_colors = graph.max_degree + 1
-    t0 = time.time()
-    use_dsatur = int(input("use dsatur [type: 0/1]"))
-    
-    aco = ACO_GraphColoring(
-        adjacency=graph.adjacency, 
-        n_colors=initial_colors, 
-        n_ants=40, 
-        n_iterations=10, 
-        alpha=1.66, 
-        beta=0.8, 
-        rho=0.35, 
-        q=100.0, 
-        seed=42,
-        use_dsatur=use_dsatur,
-        gamma=1e6
-    )
-    # Chạy thuật toán
-    best_coloring, best_used_colors, history = aco.run(verbose=True)
-
-    t1 = time.time()
-
-    # Nếu tìm được lời giải tốt nhất, in kết quả và vẽ đồ thị
-    if best_coloring is not None:
-        print("\n--Results:")
-        print(f"Execution time: {t1 - t0:.4f} seconds")
-        print(f"Number of colors used: {best_used_colors}")
-        # print(f"Best coloring found: {best_coloring}")
-        
-
-def ga():
-    t0 = time.time()
-    initial_colors = graph.max_degree + 1
-    # Khởi tạo và chạy Genetic Algorithm
-    ga = GeneticAlgorithm_GraphColoring(
-        adjacency=graph.adjacency,
-        n_colors=initial_colors,
-        n_pop=100,
-        n_generations=500,
-        crossover_rate=0.85,
-        mutation_rate=0.01,
-        n_elite=5,
-        tournament_size=3,
-        seed=42
-    )
-
-    best_coloring, best_used_colors, history = ga.run(verbose=True)
-    t1 = time.time()
-    
-    # In kết quả và vẽ đồ thị
-    if best_coloring is not None:
-        print("\n--Results:")
-        print(f"Execution time: {t1 - t0:.4f} seconds")
-        print(f"Number of colors used: {best_used_colors}")
-        
-        # Kiểm tra lại tính hợp lệ của lời giải cuối cùng
-        final_conflicts = ga._calculate_fitness(best_coloring)
-        print(f"Final solution conflicts: {final_conflicts}")
-        
-# # hiep
-def annealing():
-    print("=" * 70)
-    print("🔥 SIMULATED ANNEALING - GRAPH COLORING")
-    print("=" * 70)
-
-    # Đọc đồ thị
+    graph = Graph(file_path=args.input)
     graph.print_info()
 
-    # Chạy thuật toán
-    print("\n🚀 Running Simulated Annealing...")
-    sa = SimulatedAnnealingGraphColoring(
-        graph,
-        T0=1000,  # Nhiệt độ ban đầu
-        T_min=0.1,  # Nhiệt độ tối thiểu
-        alpha=0.95,  # Hệ số làm lạnh
-        max_iterations=100  # Iterations mỗi nhiệt độ
-    )
-    best = sa.solve()
+    if algo_name == "aco":
+        n_colors = cfg.get("n_colors", "auto")
+        if n_colors == "auto":
+            n_colors = graph.max_degree + 1
 
-    # In kết quả cuối cùng
-    print(f"\n{'=' * 70}")
-    print(f"FINAL RESULTS")
-    print(f"{'=' * 70}")
-    print(f"Energy: {best.energy()}")
-    print(f"Colors Used: {best.count_colors()}")
-    print(f"Conflicts: {best.count_conflicts()}")
-    print(f"Valid Solution: {'✅ Yes' if best.is_valid() else '❌ No'}")
-    print(f"{'=' * 70}\n")
+        aco = ACO_GraphColoring(
+            adjacency=graph.adjacency,
+            n_colors=n_colors,
+            n_ants=cfg["n_ants"],
+            n_iterations=cfg["n_iterations"],
+            alpha=cfg["alpha"],
+            beta=cfg["beta"],
+            rho=cfg["rho"],
+            q=cfg["q"],
+            seed=cfg.get("seed", 42),
+            use_dsatur=cfg.get("use_dsatur", False),
+            gamma=cfg["gamma"]
+        )
 
-    # Vẽ đồ thị convergence
-    print("📊 Plotting convergence curves...")
-    sa.plot_convergence('convergence_sa_graph_coloring.png')
+        best_coloring, used_colors, history = aco.run(verbose=cfg.get("verbose", False))
+        print("\nBest number of colors:", used_colors)
 
-    print("\n✅ All done!")
+    elif algo_name == "fa":
 
-def fa():
-    print("=" * 70)
-    print("🔥 FIREFLY ALGORITHM - GRAPH COLORING")
-    print("=" * 70)
+        fa = FireflyAlgorithmGraphColoring(
+            graph,
+            num_fireflies=cfg["num_fireflies"],
+            max_iterations=cfg["max_iterations"],
+            use_dsatur=cfg.get("use_dsatur", False),
+        )
 
-    graph.print_info()
+        best = fa.solve()
 
-    # ========== CẤU HÌNH: BẬT/TẮT DSATUR ==========
-    USE_DSATUR = True  # Đổi thành False để tắt DSATUR
-    # ===============================================
-
-    # Chạy thuật toán
-    print(f"\n🚀 Running Firefly Algorithm (DSATUR: {'ON' if USE_DSATUR else 'OFF'})...")
-    fa_graph = FireflyAlgorithmGraphColoring(
-        graph,
-        num_fireflies=40,
-        max_iterations=400,
-        use_dsatur=USE_DSATUR  # Điều khiển DSATUR ở đây
-    )
-    best = fa_graph.solve()
-
-    # In kết quả cuối cùng
-    print(f"\n{'=' * 70}")
-    print(f"FINAL RESULTS")
-    print(f"{'=' * 70}")
-    print(f"Colors Used: {best.count_colors()}")
-    print(f"Conflicts: {best.count_conflicts()}")
-    print(f"Fitness: {best.fitness():.2f}")
-    print(f"Valid Solution: {'✅ Yes' if best.is_valid() else '❌ No'}")
-    print(f"{'=' * 70}\n")
-
-    # Vẽ đồ thị convergence
-    print("📊 Plotting convergence curves...")
-    suffix = '_dsatur' if USE_DSATUR else '_random'
-    fa_graph.plot_convergence(f'convergence_graph_coloring{suffix}.png')
-
-    print("\n✅ All done!")
-
-# abc()
-# pso()
-
-# aco()
-# ga()
-
-# fa()
-annealing()
+        print("\nColors used:", best.count_colors())
+        print("Conflicts:", best.count_conflicts())
 
 
+    elif algo_name == "ga":
+        n_colors = cfg.get("n_colors", "auto")
+        if n_colors == "auto":
+            n_colors = graph.max_degree + 1
+
+        ga = GeneticAlgorithm_GraphColoring(
+            adjacency=graph.adjacency,
+            n_colors=n_colors,
+            n_pop=cfg["population"],
+            n_generations=cfg["generations"],
+            crossover_rate=cfg["crossover_rate"],
+            mutation_rate=cfg["mutation_rate"],
+            n_elite=cfg["elite"],
+            tournament_size=cfg["tournament_size"],
+            seed=cfg.get("seed", 42)
+        )
+
+        best_coloring, used_colors, history = ga.run(verbose=cfg.get("verbose", False))
+        print("\nBest number of colors:", used_colors)
+
+    elif algo_name == "pso":
+        n_colors = cfg.get("n_colors", "auto")
+        if n_colors == "auto":
+            n_colors = graph.max_degree + 1
+
+        pso = PSO_Coloring_Real(
+            graph=graph.adjacency,
+            max_color=n_colors,
+            swarm_size=cfg["swarm_size"],
+            max_iter=cfg["max_iter"],
+            w=cfg["w"],
+            c1=cfg["c1"],
+            c2=cfg["c2"]
+        )
+
+        bf, bc, best_color, used_colors = pso.optimize()
+        print("\nBest number of colors:", used_colors)
+
+
+    elif algo_name == "abc":
+
+        abc = ABC_GC(
+            n_=graph.num_vertices,
+            m_=graph.num_edges,
+            sn_=cfg["sn"],
+            limit_=cfg["limit"],
+            max_iter_=cfg["max_iter"],
+            adj_=graph.adjacency
+        )
+
+        abc.run()
+
+    elif algo_name == "annealing":
+        sa = SimulatedAnnealingGraphColoring(
+            graph,
+            T0=cfg["T0"],
+            T_min=cfg["T_min"],
+            alpha=cfg["alpha"],
+            max_iterations=cfg["iters_per_temp"],
+        )
+        best = sa.solve()
+
+        print("\nBest:", best.count_colors())
+
+    else:
+        print("Unknown algorithm config filename")
+
+
+if __name__ == "__main__":
+    main()

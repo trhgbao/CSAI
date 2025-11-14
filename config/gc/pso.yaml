@@ -1,0 +1,6 @@
+n_colors: auto
+swarm_size: 50
+max_iter: 500
+w: 0.7
+c1: 1.5
+c2: 1.5

@@ -1,0 +1,11 @@
+n_ants: 40
+n_iterations: 10
+alpha: 1.66
+beta: 0.8
+rho: 0.35
+q: 100.0
+gamma: 1000000.0
+n_colors: auto
+use_dsatur: true
+seed: 42
+verbose: true
