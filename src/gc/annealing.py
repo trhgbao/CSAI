@@ -9,39 +9,47 @@ sns.set_style("whitegrid")
 plt.rcParams['figure.figsize'] = (12, 10)
 
 class Solution:
+    """
+    Biểu diễn một phương án tô màu đồ thị
+    coloring[i] = màu của đỉnh i
+    """
+
     def __init__(self, graph, coloring=None):
         self.graph = graph
-        self.adjacency = graph.adjacency
-
-        if coloring is None:
-            self.coloring = np.random.randint(0, graph.max_colors,
-                                              size=graph.num_vertices,
-                                              dtype=np.int32)
-        else:
-            self.coloring = coloring
+        self.coloring = coloring or [random.randint(0, graph.max_colors - 1) for _ in range(graph.num_vertices)]
 
     def count_conflicts(self):
-        """Đếm số cạnh vi phạm khi dùng danh sách kề"""
+        """Đếm số cạnh vi phạm (2 đỉnh kề cùng màu)"""
         c = 0
         for v in range(self.graph.num_vertices):
-            for nb in self.adjacency[v]:
+            for nb in self.graph.adjacency[v]:
                 if self.coloring[v] == self.coloring[nb]:
                     c += 1
-        return c // 2  # Vì mỗi cạnh đếm 2 lần
+        return c // 2
 
     def count_colors(self):
+        """Đếm số màu được sử dụng"""
         return len(set(self.coloring))
 
     def energy(self):
+        """
+        Hàm năng lượng cho SA (càng thấp càng tốt)
+        E = số_conflicts * 1000 + số_màu
+        """
         return self.count_conflicts() * 1000 + self.count_colors()
 
     def copy(self):
+        """Tạo bản sao của solution"""
         return Solution(self.graph, self.coloring.copy())
 
     def is_valid(self):
+        """Kiểm tra xem lời giải có hợp lệ không"""
         return self.count_conflicts() == 0
 
 
+# ============================================================================
+# SIMULATED ANNEALING FOR GRAPH COLORING
+# ============================================================================
 class SimulatedAnnealingGraphColoring:
     """
     Thuật toán Simulated Annealing cho bài toán tô màu đồ thị
