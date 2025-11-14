@@ -119,17 +119,25 @@ def run_pso(cfg):
 
 
 def run_hc(cfg):
-    # Tạo optimizer
-    gd = GradientDescentHillClimbing()
+    # 1. Tạo optimizer
+    solver = GradientDescentHillClimbing(
+        max_steps=cfg.get("max_steps", 1000),
+        population_size=cfg.get("pop_size", 50)
+    )
 
     start_time = time.time()
 
-    best_point, best_fitness = gd.run(cfg["dim"])
+    # 2. Chạy thuật toán
+    best_point, best_fitness = solver.run(cfg["dim"])
 
     end_time = time.time()
-    print(f"best solution: {best_point}")
-    print(f"best fitness: {best_fitness}",)
-    print("Time", end_time - start_time)
+    print(f"Best solution found: {best_point}")
+    print(f"Best fitness: {best_fitness}")
+    print(f"Time: {end_time - start_time:.4f}s")
+    
+    # 3. Vẽ biểu đồ từ chính đối tượng solver
+    img_save_path = f"result/sphere_hc.png"
+    solver.visualize(img_save_path)
 
 
 
@@ -151,6 +159,9 @@ def run_cs(cfg):
     print("Time:", end_time - start_time)
     print("best nest:", best_nest)
     print("best fitness:", best_fitness)
+
+    img_save_path = f"result/sphere_cs.png"
+    optimizer.visualize(img_save_path)
 
     
 def main():

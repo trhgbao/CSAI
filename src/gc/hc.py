@@ -1,11 +1,19 @@
 import numpy as np
 import time
+<<<<<<< Updated upstream
+=======
+import matplotlib.pyplot as plt
+>>>>>>> Stashed changes
 
 class HillClimbingColoring:
     def __init__(self, penalty_weight=1000, max_steps=200, num_restarts=5):
         self.PENALTY_WEIGHT = penalty_weight
         self.MAX_STEPS = max_steps
         self.NUM_RESTARTS = num_restarts
+<<<<<<< Updated upstream
+=======
+        self.history = None
+>>>>>>> Stashed changes
 
     # -------------------------------------------------
     # HÀM TÍNH FIT
@@ -29,6 +37,10 @@ class HillClimbingColoring:
     def single_hill_climb_run(self, num_vertices, adj_list, initial_solution):
         solution = initial_solution.copy()
         fitness, _, _, solution = self.calculate_fitness(solution, adj_list, self.PENALTY_WEIGHT)
+<<<<<<< Updated upstream
+=======
+        local_history = [fitness]
+>>>>>>> Stashed changes
 
         for _ in range(self.MAX_STEPS):
             best_neighbor = None
@@ -38,6 +50,7 @@ class HillClimbingColoring:
 
             for v_idx in range(num_vertices):
                 original_color = solution[v_idx]
+<<<<<<< Updated upstream
 
                 for color in used_colors:
                     if color == original_color:
@@ -48,16 +61,32 @@ class HillClimbingColoring:
                     
                     neighbor_fitness, _, _, _ = self.calculate_fitness(neighbor, adj_list, self.PENALTY_WEIGHT)
 
+=======
+                for color in used_colors:
+                    if color == original_color:
+                        continue
+                    neighbor = solution.copy()
+                    neighbor[v_idx] = color
+                    neighbor_fitness, _, _, _ = self.calculate_fitness(neighbor, adj_list, self.PENALTY_WEIGHT)
+>>>>>>> Stashed changes
                     if neighbor_fitness < best_neighbor_fitness:
                         best_neighbor_fitness = neighbor_fitness
                         best_neighbor = neighbor
             
             if best_neighbor is not None:
                 fitness, _, _, solution = self.calculate_fitness(best_neighbor, adj_list, self.PENALTY_WEIGHT)
+<<<<<<< Updated upstream
             else:
                 break
 
         return solution
+=======
+                local_history.append(fitness)
+            else:
+                break
+
+        return solution, local_history
+>>>>>>> Stashed changes
 
     # -------------------------------------------------
     # HILL CLIMBING CẢI TIẾN
@@ -65,18 +94,54 @@ class HillClimbingColoring:
     def improved_hill_climbing(self, num_vertices, adj_list):
         global_best_solution = None
         global_best_fitness = float('inf')
+<<<<<<< Updated upstream
+=======
+        global_best_history = None
+>>>>>>> Stashed changes
 
         for _ in range(self.NUM_RESTARTS):
             initial_k = np.random.randint(num_vertices // 2, num_vertices)
             initial_solution = np.random.randint(0, initial_k, size=num_vertices)
 
+<<<<<<< Updated upstream
             local_best_solution = self.single_hill_climb_run(num_vertices, adj_list, initial_solution)
+=======
+            local_best_solution, local_history = self.single_hill_climb_run(num_vertices, adj_list, initial_solution)
+>>>>>>> Stashed changes
 
             fitness, _, _, _ = self.calculate_fitness(local_best_solution, adj_list, self.PENALTY_WEIGHT)
 
             if fitness < global_best_fitness:
                 global_best_fitness = fitness
                 global_best_solution = local_best_solution
+<<<<<<< Updated upstream
         
         _, final_colors, final_conflicts, _ = self.calculate_fitness(global_best_solution, adj_list, self.PENALTY_WEIGHT)
         return final_colors, final_conflicts
+=======
+                global_best_history = local_history
+        
+        self.history = global_best_history
+        
+        _, final_colors, final_conflicts, _ = self.calculate_fitness(global_best_solution, adj_list, self.PENALTY_WEIGHT)
+        return final_colors, final_conflicts
+    
+    def visualize(self, img_path):
+            if not self.history:
+                print("Chưa có lịch sử để vẽ. Vui lòng chạy thuật toán trước.")
+                return
+
+            plt.figure(figsize=(10, 6))
+            
+            plt.plot(self.history, color='orangered', linestyle='-')
+            
+            plt.title("Hill Climbing Convergence Curve (Best Run)", fontsize=16)
+            plt.xlabel("Step", fontsize=12)
+            plt.ylabel("Fitness (Colors + Penalty * Conflicts)", fontsize=12)
+            plt.grid(True, which="both", ls="--", linewidth=0.5)
+            plt.tight_layout()
+            
+            plt.savefig(img_path, dpi=300)
+            print(f"Đã lưu biểu đồ vào: {img_path}")
+            plt.show()
+>>>>>>> Stashed changes

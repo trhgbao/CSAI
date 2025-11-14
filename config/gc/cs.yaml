@@ -1,4 +1,7 @@
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 pop_size: 50
 max_gen: 200
 p_abandon: 0.25
