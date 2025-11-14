@@ -11,7 +11,7 @@ from src.sphere.fa import *
 from src.sphere.ga import *
 from src.sphere.pso import *
 from src.sphere.cs import *
-from src.sphere.hc import *
+from src.sphere.hc import GradientDescentHillClimbing
 
 from pathlib import Path 
 CONFIG_FOLDER = Path("./config/sphere/")
@@ -115,7 +115,21 @@ def run_pso(cfg):
     best_fitness, best_solution = pso.optimize()
     pso.visualize(img_path=cfg["plot_path"])
     print(f"best solution: {best_solution}")
+    print(f"best fitness: {best_fitness}")
+
+
+def run_hc(cfg):
+    # Tạo optimizer
+    gd = GradientDescentHillClimbing()
+
+    start_time = time.time()
+
+    best_point, best_fitness = gd.run(cfg["dim"])
+
+    end_time = time.time()
+    print(f"best solution: {best_point}")
     print(f"best fitness: {best_fitness}",)
+    print("Time", end_time - start_time)
 
 
 
@@ -161,6 +175,8 @@ def main():
         run_pso(cfg)
     elif algo == "cs":
         run_cs(cfg)
+    elif algo == "hc":
+        run_hc(cfg)
     else:
         print(f"Unknown algorithm: {algo}")
 
