@@ -36,7 +36,8 @@ def run_aco(cfg, graph):
         use_dsatur=cfg.get("use_dsatur", False),
         gamma=cfg["gamma"]
     )
-    _, used, _ = aco.run(verbose=cfg.get("verbose", False))
+    _, used = aco.run(verbose=cfg["verbose"])
+    aco.visuazlie(img_path=cfg.get("plot_path", "result/result.png"))
     print("Best colors:", used)
 
 
@@ -49,7 +50,7 @@ def run_fa(cfg, graph):
     )
     best = fa.solve()
     print("Colors:", best.count_colors(), "| Conflicts:", best.count_conflicts())
-
+    fa.plot_convergence(save_path=cfg.get("plot_path", "result/result.png"))
 
 def run_ga(cfg, graph):
     n_colors = cfg.get("n_colors", "auto")
@@ -67,8 +68,10 @@ def run_ga(cfg, graph):
         tournament_size=cfg["tournament_size"],
         seed=cfg.get("seed", 42),
     )
-    _, used, _ = ga.run(verbose=cfg.get("verbose", False))
+    _, used = ga.run(verbose=cfg.get("verbose", False))
+    ga.visuazlie(img_path=cfg.get("plot_path", "result/result.png"))
     print("Best colors:", used)
+    
 
 
 def run_pso(cfg, graph):
@@ -111,6 +114,7 @@ def run_annealing(cfg, graph):
     )
     best = sa.solve()
     print("Best colors:", best.count_colors())
+    sa.plot_convergence(save_path=cfg.get("plot_path", "result/result.png"))
 
 
 def main():

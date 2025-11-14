@@ -157,4 +157,15 @@ class ACO_GraphColoring:
 
             self.history.append(self.best_used_colors)
 
-        return self.best_coloring, self.best_used_colors, self.history
+        return self.best_coloring, self.best_used_colors
+
+    def visuazlie(self, img_path):
+        plt.figure(figsize=(6,4))
+        plt.plot(self.history, marker='o')
+        plt.xlabel("Iteration")
+        plt.ylabel("Best #Colors")
+        plt.title("ACO Graph Coloring - Convergence")
+        plt.grid(True)
+        plt.tight_layout()
+        plt.savefig(img_path, dpi=300)
+        plt.show()

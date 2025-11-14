@@ -39,8 +39,6 @@ class GeneticAlgorithm_GraphColoring:
         self.best_used_colors = np.inf
         self.history = []
 
-
-
     def _calculate_fitness(self, coloring):
         conflicts = 0
         for u, v in self.edges:
@@ -142,4 +140,15 @@ class GeneticAlgorithm_GraphColoring:
              print(f"Warning: No valid coloring found. Returning solution with {self.fitness[best_overall_idx]} conflicts.")
 
 
-        return self.best_coloring, self.best_used_colors, self.history
+        return self.best_coloring, self.best_used_colors
+
+    def visuazlie(self, img_path):
+        plt.figure(figsize=(6,4))
+        plt.plot(self.history, marker='o')
+        plt.xlabel("Iteration")
+        plt.ylabel("Best #Colors")
+        plt.title("ACO Graph Coloring - Convergence")
+        plt.grid(True)
+        plt.tight_layout()
+        plt.savefig(img_path, dpi=300)
+        plt.show()

@@ -1,4 +1,4 @@
-graph_file: ./data/200-3991.txt
+graph_file: ./data/myciel3.txt
 n_colors: auto
 population: 100
 generations: 500

@@ -1,4 +1,4 @@
-graph_file: ./data/200-3991.txt
+graph_file: ./data/myciel3.txt
 T0: 1000
 T_min: 0.01
 alpha: 0.95
