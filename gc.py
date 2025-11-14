@@ -90,10 +90,9 @@ def run_ga(cfg, graph):
         seed=cfg.get("seed", 42),
     )
     _, used = ga.run(verbose=cfg.get("verbose", False))
-    ga.visuazlie(img_path=cfg.get("plot_path", "result/result.png"))
     print("Best colors:", used)
-
     end_time = time.time()
+    ga.visualize(img_path=cfg.get("plot_path", "result/result.png"))
     print(f"Runtime: {end_time - start_time:.6f} s")
 
 

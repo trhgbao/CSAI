@@ -1,22 +1,31 @@
 import numpy as np
-import matplotlib.pyplot as plt
-import networkx as nx
-import time
 import random
+import matplotlib.pyplot as plt
 
 class GeneticAlgorithm_GraphColoring:
-    def __init__(self, adjacency, n_colors, n_pop=50, n_generations=100,
-                 crossover_rate=0.8, mutation_rate=0.05, n_elite=2,
-                 tournament_size=3, seed=42):
+    def __init__(self, adjacency, n_colors,
+                 n_pop=40, n_generations=300,
+                 crossover_rate=0.85, mutation_rate=0.015,
+                 n_elite=2, tournament_size=3,
+                 seed=42):
 
         if seed is not None:
             np.random.seed(seed)
             random.seed(seed)
 
-        self.adjacency = adjacency                  # adjacency list
+        # adjacency là adjacency list
+        self.adj = adjacency
         self.n_nodes = len(adjacency)
         self.n_colors = n_colors
 
+        # Convert adjacency list => edge list (u, v)
+        edges = []
+        for u in range(self.n_nodes):
+            for v in adjacency[u]:
+                edges.append((u, v))
+        self.edges = np.array(edges)  # shape (m, 2)
+
+        # GA params
         self.n_pop = n_pop
         self.n_generations = n_generations
         self.crossover_rate = crossover_rate
@@ -24,14 +33,7 @@ class GeneticAlgorithm_GraphColoring:
         self.n_elite = n_elite
         self.tournament_size = tournament_size
 
-        # Tạo danh sách cạnh từ adjacency list
-        self.edges = []
-        for u in range(self.n_nodes):
-            for v in adjacency[u]:
-                if u < v:
-                    self.edges.append((u, v))
-        self.edges = np.array(self.edges)
-
+        # Initialize population
         self.population = np.random.randint(0, self.n_colors, size=(n_pop, self.n_nodes))
         self.fitness = np.zeros(n_pop)
 
@@ -39,116 +41,101 @@ class GeneticAlgorithm_GraphColoring:
         self.best_used_colors = np.inf
         self.history = []
 
+    # ============= FAST FITNESS =============
     def _calculate_fitness(self, coloring):
-        conflicts = 0
-        for u, v in self.edges:
-            if coloring[u] == coloring[v]:
-                conflicts += 1
-        return conflicts
+        u = self.edges[:, 0]
+        v = self.edges[:, 1]
+        return np.sum(coloring[u] == coloring[v])
 
+    # ============= VECTORIZED SELECTION (tournament) =============
     def _selection(self):
-        """Lựa chọn cha mẹ bằng phương pháp Tournament Selection."""
-        selected_indices = []
-        for _ in range(self.n_pop):
-            # Chọn ngẫu nhiên các đối thủ cho giải đấu
-            tournament_indices = np.random.randint(0, self.n_pop, self.tournament_size)
-            tournament_fitness = self.fitness[tournament_indices]
-            # Người chiến thắng là người có fitness nhỏ nhất (ít xung đột nhất)
-            winner_index = tournament_indices[np.argmin(tournament_fitness)]
-            selected_indices.append(winner_index)
-        return self.population[selected_indices]
+        idx = np.random.randint(0, self.n_pop, size=(self.n_pop, self.tournament_size))
+        best = idx[np.arange(self.n_pop), np.argmin(self.fitness[idx], axis=1)]
+        return self.population[best]
 
-    def _crossover(self, parent1, parent2):
-        """Lai ghép hai cha mẹ bằng Single-Point Crossover."""
-        if random.random() < self.crossover_rate:
-            # Chọn một điểm cắt ngẫu nhiên
-            crossover_point = random.randint(1, self.n_nodes - 1)
-            child1 = np.concatenate([parent1[:crossover_point], parent2[crossover_point:]])
-            child2 = np.concatenate([parent2[:crossover_point], parent1[crossover_point:]])
-            return child1, child2
-        return parent1.copy(), parent2.copy()
+    # ============= FAST MUTATION =============
+    def _mutation(self, individuals):
+        mask = np.random.rand(*individuals.shape) < self.mutation_rate
+        random_colors = np.random.randint(0, self.n_colors, size=individuals.shape)
+        individuals[mask] = random_colors[mask]
+        return individuals
 
-    def _mutation(self, individual):
-        """Đột biến một cá thể."""
-        for i in range(self.n_nodes):
-            if random.random() < self.mutation_rate:
-                # Thay đổi màu của gen này thành một màu ngẫu nhiên khác
-                individual[i] = random.randint(0, self.n_colors - 1)
-        return individual
+    # ============= CROSSOVER =============
+    def _crossover_population(self, parents):
+        new_pop = np.empty_like(parents)
 
+        for i in range(0, self.n_pop, 2):
+            p1 = parents[i]
+            p2 = parents[(i + 1) % self.n_pop]
+
+            if random.random() < self.crossover_rate:
+                cp = random.randint(1, self.n_nodes - 1)
+                new_pop[i] = np.concatenate([p1[:cp], p2[cp:]])
+                new_pop[(i + 1) % self.n_pop] = np.concatenate([p2[:cp], p1[cp:]])
+            else:
+                new_pop[i] = p1.copy()
+                new_pop[(i + 1) % self.n_pop] = p2.copy()
+
+        return new_pop
+
+    # ============= CORE GA LOOP =============
     def run(self, verbose=True):
-        for generation in range(self.n_generations):
-            # 1. Đánh giá fitness cho toàn bộ quần thể
+        for gen in range(self.n_generations):
+
+            # 1. Compute fitness for population
             self.fitness = np.array([self._calculate_fitness(ind) for ind in self.population])
 
-            # 2. Tìm cá thể tốt nhất trong thế hệ hiện tại
-            best_idx_current_gen = np.argmin(self.fitness)
-            best_fitness_current_gen = self.fitness[best_idx_current_gen]
+            # Best in current generation
+            best_idx = np.argmin(self.fitness)
+            best_conflicts = self.fitness[best_idx]
 
-            # Nếu tìm thấy một lời giải hợp lệ (0 xung đột)
-            if best_fitness_current_gen == 0:
-                valid_coloring = self.population[best_idx_current_gen]
-                used_colors = len(np.unique(valid_coloring))
-                
-                # Cập nhật lời giải tốt nhất toàn cục nếu số màu ít hơn
-                if used_colors < self.best_used_colors:
-                    self.best_used_colors = used_colors
-                    self.best_coloring = valid_coloring.copy()
+            if best_conflicts == 0:  # valid solution found
+                chrom = self.population[best_idx]
+                used = len(np.unique(chrom))
+
+                if used < self.best_used_colors:
+                    self.best_used_colors = used
+                    self.best_coloring = chrom.copy()
                     if verbose:
-                        print(f"Generation {generation+1:03d} | New best solution found! Colors = {self.best_used_colors}")
+                        print(f"[Gen {gen}] Found new best valid solution: {used} colors")
 
-            # 3. Tạo thế hệ mới
-            next_generation = []
-            
-            # Elitism: Giữ lại các cá thể tốt nhất
-            elite_indices = np.argsort(self.fitness)[:self.n_elite]
-            for idx in elite_indices:
-                next_generation.append(self.population[idx])
+            # 2. Elitism
+            elite_idx = np.argsort(self.fitness)[:self.n_elite]
+            elites = self.population[elite_idx]
 
-            # 4. Lựa chọn, Lai ghép và Đột biến
-            selected_parents = self._selection()
-            
-            # Điền phần còn lại của thế hệ mới
-            for i in range(self.n_elite, self.n_pop, 2):
-                # Chọn cha mẹ từ pool đã được lựa chọn
-                parent1 = selected_parents[i]
-                # Đảm bảo không vượt quá chỉ số nếu n_pop là số lẻ
-                parent2_idx = i + 1 if (i + 1) < self.n_pop else i
-                parent2 = selected_parents[parent2_idx]
+            # 3. Selection
+            parents = self._selection()
 
-                child1, child2 = self._crossover(parent1, parent2)
-                
-                child1 = self._mutation(child1)
-                child2 = self._mutation(child2)
-                
-                next_generation.append(child1)
-                if len(next_generation) < self.n_pop:
-                    next_generation.append(child2)
-            
-            self.population = np.array(next_generation)
-            
-            # In thông tin tiến trình
-            if verbose:
-                 print(f"Generation {generation+1:03d} | Min Conflicts = {best_fitness_current_gen} | Best Colors Found = {self.best_used_colors}")
+            # 4. Crossover
+            offspring = self._crossover_population(parents)
+
+            # 5. Mutation
+            offspring = self._mutation(offspring)
+
+            # 6. Build next population
+            self.population = offspring
+            self.population[:self.n_elite] = elites
+
             self.history.append(self.best_used_colors)
 
-        # Nếu không tìm được lời giải hợp lệ, trả về None
-        if self.best_coloring is None:
-             # Cố gắng trả về lời giải ít xung đột nhất
-             best_overall_idx = np.argmin(self.fitness)
-             self.best_coloring = self.population[best_overall_idx]
-             print(f"Warning: No valid coloring found. Returning solution with {self.fitness[best_overall_idx]} conflicts.")
+            if verbose:
+                print(f"[Gen {gen}]  conflicts={best_conflicts}  best_colors={self.best_used_colors}")
 
+        # fallback nếu không tìm giải pháp hợp lệ
+        if self.best_coloring is None:
+            idx = np.argmin(self.fitness)
+            self.best_coloring = self.population[idx]
+            print("No conflict-free solution found. Returning best-so-far.")
 
         return self.best_coloring, self.best_used_colors
 
-    def visuazlie(self, img_path):
+    # ============= VISUALIZE =============
+    def visualize(self, img_path):
         plt.figure(figsize=(6,4))
-        plt.plot(self.history, marker='o')
-        plt.xlabel("Iteration")
-        plt.ylabel("Best #Colors")
-        plt.title("ACO Graph Coloring - Convergence")
-        plt.grid(True)
+        plt.plot(self.history)
+        plt.xlabel("Generation")
+        plt.ylabel("Best Colors")
+        plt.grid()
         plt.tight_layout()
         plt.savefig(img_path, dpi=300)
         plt.show()

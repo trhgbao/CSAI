@@ -122,7 +122,7 @@ class GeneticAlgorithm:
         return global_best_x, global_best_f
 
     def visualize(self, img_path):
-        plt.figure(figsize=(8, 10))
+        plt.figure(figsize=(5, 6))
         plt.plot(self.history)
         plt.xlabel('Iteration')
         plt.ylabel('Best Fitness')

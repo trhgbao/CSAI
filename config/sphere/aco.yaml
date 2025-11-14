@@ -1,10 +1,10 @@
-dim: 3
+dim: 200
 bounds: [-5.12, 5.12]
-n_ants: 30
+n_ants: 100
 n_archive: 30
 q: 0.05
 xi: 0.85
-max_iter: 12
+max_iter: 10000
 use_roulette: true
 seed: 42
 

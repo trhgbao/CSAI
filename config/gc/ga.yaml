@@ -1,9 +1,9 @@
-graph_file: ./data/myciel4.txt
+graph_file: ./data/qg.order30.txt
 n_colors: auto
-population: 100
-generations: 500
+population: 40
+generations: 300
 crossover_rate: 0.85
 mutation_rate: 0.01
-elite: 5
+elite: 2
 tournament_size: 3
 seed: 42

@@ -90,6 +90,9 @@ class ContinuousACO:
             if self.archive_fitness[0] < global_best_f:
                 global_best_f = self.archive_fitness[0]
             
+            if global_best_f < float(10 ** (-4.5)):
+                break
+            
             self.history.append(global_best_f)
             if verbose:
                 print(f"Iter {it+1}/{self.max_iter} | Best = {global_best_f:.6f}")
@@ -102,7 +105,7 @@ class ContinuousACO:
         best_x = self.archive[0].copy()
         best_f = self.archive_fitness[0]
         # Vẽ đường hội tụ
-        plt.figure(figsize=(8, 10))
+        plt.figure(figsize=(5, 6))
         plt.plot(self.history)
         plt.xlabel('Iteration')
         plt.ylabel('Best Fitness')
