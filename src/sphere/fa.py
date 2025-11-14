@@ -173,7 +173,7 @@ class FireflyAlgorithmSphereFunction:
 
         if verbose:
             print(f"\n{'=' * 70}")
-            print(f"✅ Optimization Complete!")
+            print(f"Optimization Complete!")
             print(f"{'=' * 70}")
             print(f"Dimension: {self.dim}")
             print(f"Time: {elapsed:.2f}s")
@@ -278,12 +278,10 @@ class FireflyAlgorithmSphereFunction:
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
         plt.show()
 
-        print(f"📊 Convergence plot saved to: {save_path}")
+        print(f"Convergence plot saved to: {save_path}")
 
 
-# ============================================================================
-# TEST - Chạy thử nghiệm cho các dim khác nhau
-# ============================================================================
+
 def run_experiments():
     """Chạy thử nghiệm với các dim khác nhau"""
     dimensions = [5, 10, 20, 40, 100, 200, 300]
@@ -344,19 +342,3 @@ def run_single_test(dim=30):
 
     return fa, best_solution, best_fitness
 
-
-# ============================================================================
-# MAIN - Chạy chương trình
-# ============================================================================
-if __name__ == "__main__":
-    # Cài đặt seed để có thể reproduce kết quả
-    np.random.seed(42)
-    random.seed(42)
-
-    # Chọn 1 trong 2 chế độ:
-
-    # Chế độ 1: Chạy thử nghiệm cho tất cả các dim
-    results = run_experiments()
-
-    # Chế độ 2: Chạy riêng lẻ cho 1 dim
-    # fa, best_solution, best_fitness = run_single_test(dim=30)

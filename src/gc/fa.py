@@ -45,10 +45,6 @@ class Solution:
         """Kiểm tra xem lời giải có hợp lệ không"""
         return self.count_conflicts() == 0
 
-
-# ============================================================================
-# DSATUR ALGORITHM - Thuật toán tô màu tham lam
-# ============================================================================
 class DSATUR:
     """
     Thuật toán DSATUR (Degree of Saturation)
@@ -239,7 +235,7 @@ class FireflyAlgorithmGraphColoring:
         elapsed = time.time() - start
 
         print(f"\n{'=' * 70}")
-        print(f"✅ Optimization Complete!")
+        print(f"Optimization Complete!")
         print(f"{'=' * 70}")
         print(f"Time: {elapsed:.2f}s")
         print(f"Best Fitness: {best_fit:.2f}")
@@ -378,4 +374,4 @@ class FireflyAlgorithmGraphColoring:
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
         plt.show()
 
-        print(f"📊 Convergence plot saved to: {save_path}")
+        print(f"Convergence plot saved to: {save_path}")

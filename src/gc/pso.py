@@ -1,7 +1,6 @@
 import numpy as np
 import time
 
-# === hàm đếm số conflict ===
 def conflict_count(coloring, graph):
     conflicts = 0
     for u in range(len(graph)):
@@ -11,7 +10,6 @@ def conflict_count(coloring, graph):
     return conflicts // 2  # mỗi cạnh bị đếm 2 lần
 
 
-# === class PSO thực cho graph coloring ===
 class PSO_Coloring_Real:
     def __init__(self, graph, max_color, swarm_size=50, max_iter=2000,
                  w=0.7, c1=1.5, c2=1.5):
@@ -69,7 +67,6 @@ class PSO_Coloring_Real:
             if it % print_every == 0:
                 print(f"Iter {it}: Best fitness = {self.global_best_fit}")
 
-        # --- đánh giá kết quả cuối cùng ---
         best_coloring = self.real_to_color(self.global_best)
         best_conflicts = conflict_count(best_coloring, self.graph)
         used_colors = len(set(best_coloring))

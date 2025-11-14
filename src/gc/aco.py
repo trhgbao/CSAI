@@ -13,8 +13,6 @@ class ACO_GraphColoring:
             np.random.seed(seed)
             random.seed(seed)
 
-        # ======== CHUYỂN SANG DANH SÁCH KỀ ========
-        # adjacency là list of lists
         self.adjacency = adjacency
         self.n_nodes = len(adjacency)
         self.n_colors = n_colors
@@ -43,9 +41,6 @@ class ACO_GraphColoring:
         self.history = []
 
 
-    # =======================
-    # Heuristic bên dưới giữ nguyên
-    # =======================
     def heuristic(self, coloring, node):
         neighbor_colors = coloring[self.neighbors[node]]
 
@@ -84,7 +79,7 @@ class ACO_GraphColoring:
 
             all_colorings = np.full((self.n_ants, self.n_nodes), -1, dtype=int)
 
-            # --- Ant loop ---
+            # Ant 
             for ant in range(self.n_ants):
 
                 coloring = all_colorings[ant]
@@ -112,7 +107,7 @@ class ACO_GraphColoring:
                     tau = self.pheromone[node] ** self.alpha
                     probs = tau * eta
 
-                    # cấm màu của hàng xóm
+                    # cấm màu của hàng xóm (chọn màu không trùng)
                     neighbor_colors = coloring[neighbors]
                     forbidden = np.unique(neighbor_colors[neighbor_colors != -1])
                     probs[forbidden] = 0
@@ -136,7 +131,7 @@ class ACO_GraphColoring:
                     if not uncolored_mask.any():
                         break
 
-            # --- Evaluate + Update pheromone ---
+            # Evaluate + Update pheromone 
             num_used_colors = np.array([len(np.unique(c)) for c in all_colorings])
 
             self.pheromone *= (1 - self.rho)

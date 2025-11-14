@@ -51,7 +51,7 @@ class ABC_Sphere_NP:
 
             newFit = 1.0 / (1.0 + np.sum(newX * newX))
             if newFit > self.fitness[i]:
-                self.X[i] = newX  # cập nhật ngay → asynchronous
+                self.X[i] = newX  
                 self.fitness[i] = newFit
                 self.trial[i] = 0
             else:
@@ -64,7 +64,6 @@ class ABC_Sphere_NP:
         else:
             prob = self.fitness / total
 
-        # simple loop (keeps behavior similar to original)
         for _ in range(self.SN):
             i = np.random.choice(self.SN, p=prob)
             j = np.random.randint(0, self.SN)

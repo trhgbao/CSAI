@@ -15,7 +15,6 @@ class CuckooSearchHybrid:
         self.diversity_rate = diversity_rate
         self.low, self.high = search_range
 
-        # --- THÊM MỚI: Khởi tạo các thuộc tính để lưu lịch sử ---
         self.history = None
         self.dimensions = None
 
@@ -60,7 +59,7 @@ class CuckooSearchHybrid:
 
             current_alpha = self.initial_alpha * (1 - (gen + 1) / self.max_gen)
 
-            # --- Lévy flight ---
+            # Lévy flight 
             i = np.random.randint(0, self.pop_size)
             levy_step = self.get_levy_flight_step(self.levy_beta, dims)
             new_nest = nests[i] + current_alpha * levy_step
@@ -71,7 +70,7 @@ class CuckooSearchHybrid:
             if new_fitness < fitness[j]:
                 nests[j], fitness[j] = new_nest, new_fitness
 
-            # --- Abandon worst nests ---
+            # Abandon worst nests 
             sorted_indices = np.argsort(fitness)
             num_abandon = int(self.p_abandon * self.pop_size)
 

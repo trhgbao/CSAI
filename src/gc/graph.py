@@ -3,7 +3,7 @@ import numpy as np
 class Graph:
     """
     Đọc và lưu trữ đồ thị từ file
-    Format file: dòng đầu là số đỉnh, các dòng sau là các cạnh (u v)
+    Format file: dòng đầu là số đỉnh số cạnh, các dòng sau là các cạnh (u v)
     """
 
     def __init__(self, file_path):

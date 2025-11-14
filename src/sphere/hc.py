@@ -92,3 +92,4 @@ class GradientDescentHillClimbing:
         print(f"Đã lưu biểu đồ vào: {img_path}")
         plt.show()
 
+ 

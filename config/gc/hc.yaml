@@ -2,8 +2,4 @@ penalty_weight: 1000    # Trọng số phạt xung đột
 max_steps: 200          # Số bước hill climbing cho 1 lần leo đồi
 num_restarts: 5         # Số lần restart từ lời giải ngẫu nhiên
 
-<<<<<<< Updated upstream
-graph_file: "./data/myciel3.txt"
-=======
-graph_file: "./data/myciel4.txt"
->>>>>>> Stashed changes
+graph_file: "./data/myciel5.txt"

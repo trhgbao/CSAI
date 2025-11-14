@@ -47,9 +47,6 @@ class Solution:
         return self.count_conflicts() == 0
 
 
-# ============================================================================
-# SIMULATED ANNEALING FOR GRAPH COLORING
-# ============================================================================
 class SimulatedAnnealingGraphColoring:
     """
     Thuật toán Simulated Annealing cho bài toán tô màu đồ thị
@@ -98,7 +95,6 @@ class SimulatedAnnealingGraphColoring:
         print(f"Initial Energy: {current.energy()}")
         print(f"{'=' * 70}\n")
 
-        # Vòng lặp chính
         while T > self.T_min:
             for _ in range(self.max_iterations):
                 iteration_count += 1
@@ -139,7 +135,7 @@ class SimulatedAnnealingGraphColoring:
         elapsed = time.time() - start
 
         print(f"\n{'=' * 70}")
-        print(f"✅ Optimization Complete!")
+        print(f"Optimization Complete!")
         print(f"{'=' * 70}")
         print(f"Total Iterations: {iteration_count}")
         print(f"Time: {elapsed:.2f}s")
@@ -215,4 +211,4 @@ class SimulatedAnnealingGraphColoring:
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
         plt.show()
 
-        print(f"📊 Convergence plot saved to: {save_path}")
+        print(f"Convergence plot saved to: {save_path}")

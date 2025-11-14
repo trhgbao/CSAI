@@ -8,9 +8,6 @@ import random
 sns.set_style("whitegrid")
 
 
-# ============================================================================
-# SIMULATED ANNEALING FOR SPHERE FUNCTION
-# ============================================================================
 class SimulatedAnnealingSphereFunction:
     """
     Thuật toán Simulated Annealing cho bài toán tối ưu liên tục - Sphere Function
@@ -80,7 +77,6 @@ class SimulatedAnnealingSphereFunction:
         print(f"Initial f(x): {current_energy:.10f}")
         print(f"{'=' * 70}\n")
 
-        # Vòng lặp chính
         while T > self.T_min:
             for _ in range(self.max_iterations):
                 iteration_count += 1
@@ -121,7 +117,7 @@ class SimulatedAnnealingSphereFunction:
         elapsed = time.time() - start
 
         print(f"\n{'=' * 70}")
-        print(f"✅ Optimization Complete!")
+        print(f"Optimization Complete!")
         print(f"{'=' * 70}")
         print(f"Total Iterations: {iteration_count}")
         print(f"Time: {elapsed:.2f}s")
@@ -180,5 +176,5 @@ class SimulatedAnnealingSphereFunction:
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
         plt.show()
 
-        print(f"📊 Convergence plot saved to: {save_path}")
+        print(f"Convergence plot saved to: {save_path}")
 
