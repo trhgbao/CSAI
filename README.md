@@ -35,8 +35,16 @@
     ```
 
 ### Chạy thuật toán GC
-
+Thay đổi config file trong `config/gc/<algo>.yaml`
 ```bash
-python3 gc.py --algo aco --input ./data/200-3991.txt
+python3 gc.py --algo <algo>
+# python3 gc.py --algo aco
 ```
 
+
+### Chạy thuật toán Sphere Function
+Thay đổi config file trong `config/sphere/<algo>.yaml`
+```bash
+python3 sphere.py --algo <algo>
+# python3 sphere.py --algo aco
+```
