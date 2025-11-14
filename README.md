@@ -58,7 +58,7 @@ Các file config (biến và testcase dim) của các thuật toán nằm trong 
 python3 sphere.py --algo <algo>
 ```
 #### 3. Ví dụ
-Để chạy thuật toán Genetic Algorithm cho bài toán Sphere Function: Cần điều chỉnh `config/sphere/ga.yaml`.
+Để chạy thuật toán Particle Swarm Optimization cho bài toán Sphere Function: Cần điều chỉnh `config/sphere/pso.yaml`.
 ```bash
-python3 sphere.py --algo ga
+python3 sphere.py --algo pso
 ```
