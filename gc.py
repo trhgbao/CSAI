@@ -12,6 +12,7 @@ from src.gc.annealing import SimulatedAnnealingGraphColoring
 from src.gc.fa import FireflyAlgorithmGraphColoring
 from src.gc.bfs import bfs_coloring, bfs_coloring_layer_sorted
 from src.gc.cs import *
+from src.gc.hc import HillClimbingColoring
 
 CONFIG_FOLDER = Path("./config/gc")
 
@@ -150,6 +151,18 @@ def run_cs(cfg, graph: Graph):
     end_time = time.time()
     print("\nTotal colors used:", num_colors)
     print(f"Runtime: {end_time - start_time} s")
+    
+def run_hc(cfg, graph: Graph):
+    model = HillClimbingColoring(
+        penalty_weight = cfg["penalty_weight"],
+        max_steps = cfg["max_steps"],
+        num_restarts = cfg["num_restarts"]
+    )
+
+    num_colors, num_conflicts = model.improved_hill_climbing(graph.num_vertices, graph.adjacency)
+
+    print("Colors =", num_colors)
+    print("Conflicts =", num_conflicts)
 
 def main():
     parser = argparse.ArgumentParser()
@@ -180,6 +193,8 @@ def main():
         run_bfs(cfg, graph)
     elif algo == "cs":
         run_cs(cfg, graph)
+    elif algo == "hc":
+        run_hc(cfg, graph)
     else:
         print(f"Unknown algorithm: {algo}")
 
