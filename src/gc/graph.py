@@ -13,16 +13,15 @@ class Graph:
             n_nodes, n_edges = map(int, lines[0].split())
             edges = [(int(u) - 1, int(v) - 1) for u, v in (line.split() for line in lines[1:])]
         
-        adjacency = np.zeros((n_nodes, n_nodes), dtype=int)
+        self.adjacency = [[] for _ in range(n_nodes)]
+
         for u, v in edges:
-            adjacency[u, v] = 1
-            adjacency[v, u] = 1
+            self.adjacency[u].append(v)
+            self.adjacency[v].append(u)
         
-        degrees = np.sum(adjacency, axis=1)
-        self.max_degree = np.max(degrees)
-            
+        degrees = [len(self.adjacency[u]) for u in range(n_nodes)]
+        self.max_degree = max(degrees)
         self.num_vertices = n_nodes
-        self.adjacency = adjacency
         self.num_edges = n_edges
         self.max_colors = self.max_degree + 1
 

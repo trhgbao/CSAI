@@ -95,7 +95,7 @@ def ga():
         seed=42
     )
 
-    best_coloring, best_used_colors, history = ga.run(verbose=False)
+    best_coloring, best_used_colors, history = ga.run(verbose=True)
     t1 = time.time()
     
     # In kết quả và vẽ đồ thị
@@ -181,11 +181,14 @@ def fa():
     fa_graph.plot_convergence(f'convergence_graph_coloring{suffix}.png')
 
     print("\n✅ All done!")
-    
+
+# abc()
 # pso()
+
 # aco()
 # ga()
+
 # fa()
-abc()
+annealing()
 
 
