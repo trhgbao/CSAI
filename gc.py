@@ -1,6 +1,7 @@
 import argparse
 import yaml
 from pathlib import Path
+import time
 
 from src.gc.graph import Graph
 from src.gc.aco import ACO_GraphColoring
@@ -9,6 +10,7 @@ from src.gc.pso import PSO_Coloring_Real
 from src.gc.abc import ABC_GC
 from src.gc.annealing import SimulatedAnnealingGraphColoring
 from src.gc.fa import FireflyAlgorithmGraphColoring
+from src.gc.bfs import bfs_coloring, bfs_coloring_layer_sorted
 
 CONFIG_FOLDER = Path("./config/gc")
 
@@ -116,6 +118,18 @@ def run_annealing(cfg, graph):
     print("Best colors:", best.count_colors())
     sa.plot_convergence(save_path=cfg.get("plot_path", "result/result.png"))
 
+def run_bfs(cfg, graph: Graph):
+    sdl = cfg["SDL"]
+    start_time = time.time()
+    if sdl:
+        color = bfs_coloring_layer_sorted(graph.num_vertices, graph.adjacency)
+    else:
+        color = bfs_coloring(graph.num_vertices, graph.adjacency)
+    end_time = time.time()
+    runtime_sec = end_time - start_time
+    min_colors_used = max(color) + 1
+    print("\nTotal colors used:", min_colors_used)
+    print(f"Runtime: {runtime_sec:.6f} s")
 
 def main():
     parser = argparse.ArgumentParser()
@@ -142,6 +156,8 @@ def main():
         run_ga(cfg, graph)
     elif algo == "pso":
         run_pso(cfg, graph)
+    elif algo == "bfs":
+        run_bfs(cfg, graph)
     else:
         print(f"Unknown algorithm: {algo}")
 
