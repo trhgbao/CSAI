@@ -62,4 +62,5 @@ python3 sphere.py --algo <algo>
 ```bash
 python3 sphere.py --algo pso
 ```
-Với dim = 3 của PSO, có hỗ trợ visualize hội tụ trên hệ tọa độ Oxyz.
+Với dim = 3 của PSO, có hỗ trợ visualize hội tụ trên hệ tọa độ Oxyz. 
+![Demo PSO Visualization](result/demo_pso.png)
