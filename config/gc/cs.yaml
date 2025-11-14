@@ -1,0 +1,11 @@
+
+pop_size: 50
+max_gen: 200
+p_abandon: 0.25
+penalty_weight: 1000
+local_steps: 50
+levy_beta: 1.5
+dsatur_ratio: 0.8
+use_dsatur: 0
+
+graph_file: "./data/myciel3.txt"

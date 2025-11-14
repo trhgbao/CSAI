@@ -11,6 +11,7 @@ from src.gc.abc import ABC_GC
 from src.gc.annealing import SimulatedAnnealingGraphColoring
 from src.gc.fa import FireflyAlgorithmGraphColoring
 from src.gc.bfs import bfs_coloring, bfs_coloring_layer_sorted
+from src.gc.cs import *
 
 CONFIG_FOLDER = Path("./config/gc")
 
@@ -130,6 +131,25 @@ def run_bfs(cfg, graph: Graph):
     min_colors_used = max(color) + 1
     print("\nTotal colors used:", min_colors_used)
     print(f"Runtime: {runtime_sec:.6f} s")
+    
+def run_cs(cfg, graph: Graph):
+    model = CuckooGraphColoring(
+        pop_size=cfg["pop_size"],
+        max_gen=cfg["max_gen"],
+        p_abandon=cfg["p_abandon"],
+        penalty_weight=cfg["penalty_weight"],
+        local_steps=cfg["local_steps"],
+        levy_beta=cfg["levy_beta"],
+        dsatur_ratio=cfg["dsatur_ratio"]
+    )
+    start_time = time.time()
+    if not cfg["use_dsatur"]:
+        num_colors, num_conflicts, best_solution = model.modified_cuckoo_search(graph.num_vertices, graph.adjacency)
+    else:
+        num_colors, num_conflicts, best_solution = model.cuckoo_search_with_dsatur_init(graph.num_vertices, graph.adjacency)
+    end_time = time.time()
+    print("\nTotal colors used:", num_colors)
+    print(f"Runtime: {end_time - start_time} s")
 
 def main():
     parser = argparse.ArgumentParser()
@@ -158,6 +178,8 @@ def main():
         run_pso(cfg, graph)
     elif algo == "bfs":
         run_bfs(cfg, graph)
+    elif algo == "cs":
+        run_cs(cfg, graph)
     else:
         print(f"Unknown algorithm: {algo}")
 
