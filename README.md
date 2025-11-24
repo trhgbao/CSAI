@@ -40,7 +40,7 @@
 #### 1. Config 
 Các file config (biến và testcase graph_file) của các thuật toán nằm trong folder tương ứng `config/gc/`
 #### 2. Hướng dẫn chạy
-Điều chỉnh `config/gc/<aco>.yaml`
+Điều chỉnh `config/gc/<algo>.yaml`
 ```bash
 python3 gc.py --algo <algo>
 ```
@@ -56,7 +56,7 @@ Demo
 #### 1. Config 
 Các file config (biến và testcase dim) của các thuật toán nằm trong folder tương ứng `config/sphere/`
 #### 2. Hướng dẫn chạy
-Điều chỉnh `config/sphere/<aco>.yaml`
+Điều chỉnh `config/sphere/<algo>.yaml`
 ```bash
 python3 sphere.py --algo <algo>
 ```
